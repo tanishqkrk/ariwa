@@ -1,65 +1,274 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
+import toast from "react-hot-toast";
+import wordExists from "@/utils/checkWord";
 
 export default function Home() {
+  const [word, setWord] = useState("paste".toUpperCase());
+  const [chances, setChances] = useState(6);
+  const [life, setLife] = useState(0);
+
+  const layout = new Array(chances)
+    .fill("")
+    .map((x) => [
+      ...new Array(word.split("").length).fill({ letter: "", status: "" }),
+    ]);
+
+  let [attempts, setAttempts] =
+    useState<{ letter: string; status: string }[][]>(layout);
+
+  useEffect(() => {
+    // console.log(...attempts[0]);
+  }, [attempts]);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  // console.log(attempts);
+
+  function addLetter(letter: string) {
+    if (currentIndex < word.length) {
+      let localIndex = currentIndex;
+
+      setCurrentIndex((org) => org + 1);
+      localIndex = localIndex + 1;
+      setAttempts((org) =>
+        org.map((x, i) => {
+          if (i === life) {
+            return x.map((y, i) => {
+              if (i === currentIndex) {
+                return { letter, status: "" };
+              } else {
+                return y;
+              }
+            });
+          } else {
+            return x;
+          }
+        })
+      );
+    }
+  }
+
+  function removeLetter() {
+    if (currentIndex > 0) {
+      let localIndex = currentIndex;
+      setCurrentIndex((org) => org - 1);
+      localIndex = localIndex - 1;
+      setAttempts((org) =>
+        org.map((x, i) => {
+          if (i === life) {
+            return x.map((y, i) => {
+              if (i === localIndex) {
+                return { letter: "", status: "" };
+              } else {
+                return y;
+              }
+            });
+          } else {
+            return x;
+          }
+        })
+      );
+    }
+  }
+
+  function submitAttempt() {
+    if (life < chances) {
+      if (attempts[life].filter((x) => x.letter === "").length > 0) {
+        toast("Finish the word atleast?", {
+          style: {
+            background: "#1a1a1a",
+            color: "#ffffff",
+            boxShadow: "none",
+            filter: "none",
+            borderRadius: "3px",
+          },
+          position: "bottom-center",
+        });
+      } else {
+        if (
+          wordExists(attempts[life].map((x) => x.letter).join(""))
+          // true
+        ) {
+          const wordArray = word.split("");
+          const attemptArray = attempts[life].map((x) => x.letter);
+          for (let idx = 0; idx < word.length; idx++) {
+            // !@ts-ignore
+            setAttempts((org) =>
+              org.map((x, i) => {
+                if (i === life) {
+                  return x.map((y, i) => {
+                    if (i === idx) {
+                      if (!wordArray.includes(attemptArray[idx])) {
+                        return {
+                          ...y,
+                          status: "INCORRECT",
+                        };
+                      } else if (wordArray[idx] === attemptArray[idx]) {
+                        return {
+                          ...y,
+                          status: "CORRECT",
+                        };
+                      } else if (
+                        // wordArray.filter((x) => x === attemptArray[idx])
+                        //   .length ===
+                        //   attemptArray.filter((x) => x === attemptArray[idx])
+                        //     .length &&
+                        wordArray.includes(attemptArray[idx])
+                      ) {
+                        return {
+                          ...y,
+                          status: "EXISTS",
+                        };
+                      } else {
+                        return {
+                          ...y,
+                          status: "INCORRECT",
+                        };
+                      }
+                    } else {
+                      return y;
+                    }
+                  });
+                } else {
+                  return x;
+                }
+              })
+            );
+          }
+          setLife((org) => org + 1);
+          setCurrentIndex(0);
+        } else {
+          toast("Not a word bruv.", {
+            style: {
+              background: "#1a1a1a",
+              color: "#ffffff",
+              boxShadow: "none",
+              filter: "none",
+              borderRadius: "3px",
+            },
+            position: "bottom-center",
+          });
+        }
+      }
+    }
+  }
+
+  // console.log(attempts);
+
+  const keyboardRef = useRef<HTMLInputElement>(null);
+
+  const letters = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main
+      onClick={() => {
+        if (keyboardRef.current) keyboardRef.current.focus();
+      }}
+      className="h-svh w-screen overflow-hidden flex justify-center items-center flex-col "
+    >
+      {/* <div className="mb-6 text-4xl  text-center  w-full font-semibold flex justify-center items-center h-16 fixed top-0">
+        <img className="w-8 mx-3" src="/logo.svg" alt="" /> ARIWA
+      </div> */}
+      <div className="h-full w-full">
+        <input
+          ref={keyboardRef}
+          autoFocus
+          type="text"
+          className="opacity-0 pointer-events-none fixed"
+          onKeyDown={(e) => {
+            const code = e.code.replaceAll("Key", "");
+
+            if (e.code === "Enter") {
+              submitAttempt();
+            }
+            if (!e.ctrlKey) {
+              if (letters.includes(code)) {
+                addLetter(code);
+              }
+              if (e.code === "Backspace") {
+                removeLetter();
+              }
+            }
+          }}
+          name=""
+          id=""
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <div className="gap-1 flex flex-col  p-6 h-full justify-center items-center">
+          {attempts.map((atp, j) => {
+            return (
+              <div key={j} className="flex items-center justify-center  gap-1">
+                {atp.map((word, i) => {
+                  return (
+                    <motion.div
+                      initial={{
+                        scale: 1,
+                      }}
+                      animate={{
+                        scale: j !== life ? 1 : currentIndex === i ? 0.96 : 1,
+                      }}
+                      key={i}
+                      className={`h-16 aspect-square border text-center flex justify-center items-center text-2xl font-semibold rounded-md
+                      ${
+                        j !== life
+                          ? word.status === "CORRECT"
+                            ? "bg-green-800 text-foreground"
+                            : word.status === "INCORRECT"
+                            ? "opacity-50 bg-foreground/10   text-foreground"
+                            : word.status === "EXISTS"
+                            ? "bg-amber-500 text-foreground"
+                            : ""
+                          : word.letter === ""
+                          ? ""
+                          : "bg-foreground/10 "
+                      }
+                      ${
+                        j !== life
+                          ? "border-foreground/30"
+                          : currentIndex === i
+                          ? "border-foreground"
+                          : "border-foreground/30"
+                      } duration-150`}
+                    >
+                      {word.letter}
+                      {/* { currentIndex === i ? word.letter : "-"} */}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        <div className="text-white h-full ">d</div>
+      </div>
+    </main>
   );
 }
