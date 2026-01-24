@@ -22,8 +22,7 @@ export default function Home() {
   useEffect(() => {
     // console.log(...attempts[0]);
   }, [attempts]);
-  const add = new Audio("/remove.mp3");
-  const remove = new Audio("/add.mp3");
+
   const [currentIndex, setCurrentIndex] = useState(0);
   // console.log(attempts);
 
@@ -207,6 +206,16 @@ export default function Home() {
     String.fromCharCode(65 + i),
   );
 
+  const [add, setAdd] = useState<HTMLAudioElement | null>(null);
+  const [remove, setRemove] = useState<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (window) {
+      setAdd(new Audio("/remove.mp3"));
+      setRemove(new Audio("/add.mp3"));
+    }
+  }, []);
+
   return (
     <main
       onClick={() => {
@@ -231,11 +240,12 @@ export default function Home() {
             }
             if (!e.ctrlKey) {
               if (letters.includes(code)) {
-                add.play();
+                add && add.play();
+
                 addLetter(code);
               }
               if (e.code === "Backspace") {
-                remove.play();
+                remove && remove.play();
                 removeLetter();
               }
             }
