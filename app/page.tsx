@@ -206,15 +206,10 @@ export default function Home() {
     String.fromCharCode(65 + i),
   );
 
-  const [add, setAdd] = useState<HTMLAudioElement | null>(null);
-  const [remove, setRemove] = useState<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (window) {
-      setAdd(new Audio("/remove.mp3"));
-      setRemove(new Audio("/add.mp3"));
-    }
-  }, []);
+  const add =
+    typeof Audio !== "undefined" ? new Audio("/remove.mp3") : undefined;
+  const remove =
+    typeof Audio !== "undefined" ? new Audio("/add.mp3") : undefined;
 
   return (
     <main
@@ -240,12 +235,11 @@ export default function Home() {
             }
             if (!e.ctrlKey) {
               if (letters.includes(code)) {
-                add && add.play();
-
+                add?.play();
                 addLetter(code);
               }
               if (e.code === "Backspace") {
-                remove && remove.play();
+                remove?.play();
                 removeLetter();
               }
             }
