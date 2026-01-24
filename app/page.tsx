@@ -7,7 +7,7 @@ import wordExists from "@/utils/checkWord";
 
 export default function Home() {
   const [word, setWord] = useState("paste".toUpperCase());
-  const [chances, setChances] = useState(6);
+  const [chances, setChances] = useState(5);
   const [life, setLife] = useState(0);
 
   const layout = new Array(chances)
@@ -22,7 +22,8 @@ export default function Home() {
   useEffect(() => {
     // console.log(...attempts[0]);
   }, [attempts]);
-
+  const add = new Audio("/remove.mp3");
+  const remove = new Audio("/add.mp3");
   const [currentIndex, setCurrentIndex] = useState(0);
   // console.log(attempts);
 
@@ -45,7 +46,7 @@ export default function Home() {
           } else {
             return x;
           }
-        })
+        }),
       );
     }
   }
@@ -68,7 +69,7 @@ export default function Home() {
           } else {
             return x;
           }
-        })
+        }),
       );
     }
   }
@@ -88,55 +89,98 @@ export default function Home() {
         });
       } else {
         if (
-          wordExists(attempts[life].map((x) => x.letter).join(""))
-          // true
+          // wordExists(attempts[life].map((x) => x.letter).join(""))
+          true
         ) {
           const wordArray = word.split("");
           const attemptArray = attempts[life].map((x) => x.letter);
-          for (let idx = 0; idx < word.length; idx++) {
-            // !@ts-ignore
-            setAttempts((org) =>
-              org.map((x, i) => {
-                if (i === life) {
-                  return x.map((y, i) => {
-                    if (i === idx) {
-                      if (!wordArray.includes(attemptArray[idx])) {
-                        return {
-                          ...y,
-                          status: "INCORRECT",
-                        };
-                      } else if (wordArray[idx] === attemptArray[idx]) {
-                        return {
-                          ...y,
-                          status: "CORRECT",
-                        };
-                      } else if (
-                        // wordArray.filter((x) => x === attemptArray[idx])
-                        //   .length ===
-                        //   attemptArray.filter((x) => x === attemptArray[idx])
-                        //     .length &&
-                        wordArray.includes(attemptArray[idx])
-                      ) {
-                        return {
-                          ...y,
-                          status: "EXISTS",
-                        };
-                      } else {
-                        return {
-                          ...y,
-                          status: "INCORRECT",
-                        };
-                      }
-                    } else {
-                      return y;
-                    }
-                  });
-                } else {
-                  return x;
-                }
-              })
-            );
-          }
+
+          const dict: any = {};
+          letters.forEach((letter) => {
+            dict[letter] = wordArray.filter((l) => l === letter).length;
+          });
+          // for (let idx = 0; idx < word.length; idx++) {
+          //   // @ts-ignore
+          //   setAttempts((org) =>
+          //     org.map((x, i) => {
+          //       if (i === life) {
+          //         return x.map((y, i) => {
+          //           if (i === idx) {
+          //             if (!wordArray.includes(attemptArray[idx])) {
+          //               return {
+          //                 ...y,
+          //                 status: "INCORRECT",
+          //               };
+          //             } else if (
+          //               wordArray.filter((x) => x === attemptArray[idx])
+          //                 .length < dict[attemptArray[idx]]
+          //             ) {
+          //               return {
+          //                 ...y,
+          //                 status: "INCORRECT",
+          //               };
+          //             } else if (wordArray[idx] === attemptArray[idx]) {
+          //               return {
+          //                 ...y,
+          //                 status: "CORRECT",
+          //               };
+          //             } else if (wordArray.includes(attemptArray[idx])) {
+          //               return {
+          //                 ...y,
+          //                 status: "EXISTS",
+          //               };
+          //             } else {
+          //               return {
+          //                 ...y,
+          //                 status: "INCORRECT",
+          //               };
+          //             }
+          //           } else {
+          //             return y;
+          //           }
+          //         });
+          //       } else {
+          //         return x;
+          //       }
+          //     }),
+          //   );
+          // }
+
+          let finalArray: { letter: string; status: string }[] = [];
+
+          wordArray.forEach((letter, idx) => {
+            console.log(letter, attemptArray[idx]);
+            if (letter === attemptArray[idx]) {
+              finalArray.push({
+                letter: attemptArray[idx],
+                status: "CORRECT",
+              });
+            } else if (attemptArray.includes(letter)) {
+              finalArray.push({
+                letter: attemptArray[idx],
+                status: "EXISTS",
+              });
+            } else if (letter !== attemptArray[idx]) {
+              finalArray.push({
+                letter: attemptArray[idx],
+
+                status: "INCORRECT",
+              });
+            }
+          });
+
+          console.log(...finalArray);
+
+          setAttempts((org) => {
+            return org.map((x, i) => {
+              if (i === life) {
+                return finalArray;
+              } else {
+                return x;
+              }
+            });
+          });
+
           setLife((org) => org + 1);
           setCurrentIndex(0);
         } else {
@@ -159,34 +203,9 @@ export default function Home() {
 
   const keyboardRef = useRef<HTMLInputElement>(null);
 
-  const letters = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
+  const letters = Array.from({ length: 26 }, (_, i) =>
+    String.fromCharCode(65 + i),
+  );
 
   return (
     <main
@@ -212,9 +231,11 @@ export default function Home() {
             }
             if (!e.ctrlKey) {
               if (letters.includes(code)) {
+                add.play();
                 addLetter(code);
               }
               if (e.code === "Backspace") {
+                remove.play();
                 removeLetter();
               }
             }
@@ -236,26 +257,26 @@ export default function Home() {
                         scale: j !== life ? 1 : currentIndex === i ? 0.96 : 1,
                       }}
                       key={i}
-                      className={`h-16 aspect-square border text-center flex justify-center items-center text-2xl font-semibold rounded-md
+                      className={`h-16 aspect-square border text-center flex justify-center items-center text-2xl font-semibold rounded-sm
                       ${
                         j !== life
                           ? word.status === "CORRECT"
                             ? "bg-green-800 text-foreground"
                             : word.status === "INCORRECT"
-                            ? "opacity-50 bg-foreground/10   text-foreground"
-                            : word.status === "EXISTS"
-                            ? "bg-amber-500 text-foreground"
-                            : ""
+                              ? "opacity-50 bg-foreground/10   text-foreground"
+                              : word.status === "EXISTS"
+                                ? "bg-amber-500 text-foreground"
+                                : ""
                           : word.letter === ""
-                          ? ""
-                          : "bg-foreground/10 "
+                            ? ""
+                            : "bg-foreground/10 "
                       }
                       ${
                         j !== life
                           ? "border-foreground/30"
                           : currentIndex === i
-                          ? "border-foreground"
-                          : "border-foreground/30"
+                            ? "border-foreground"
+                            : "border-foreground/30"
                       } duration-150`}
                     >
                       {word.letter}
