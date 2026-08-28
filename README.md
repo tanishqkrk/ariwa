@@ -1,3 +1,1 @@
 This is under construction. I'm still working on this game. If you're seeing this, buzz off mate, lemme work in peace.
-
-Im sorry baby please come back. I promise i will treat you with love and care please be mine.... 
