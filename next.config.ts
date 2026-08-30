@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // turbopack: {
-  //   root: "app",
-  // },
   devIndicators: false,
+
   // redirects: () => {
   //   return [
   //     {
