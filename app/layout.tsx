@@ -23,34 +23,19 @@ const poppins = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: "WordRush — The Word Game That Keeps You Guessing",
+  title: "WordRush — Guess. Think. Win.",
   description:
-    "Guess words, build streaks, and prove your vocabulary in WordRush — a fast, addictive word game where every guess counts.",
-  keywords: [
-    "WordRush",
-    "word game",
-    "word guessing game",
-    "vocabulary game",
-    "daily word game",
-    "word puzzle",
-    "guess the word",
-  ],
+    "A fast-paced word guessing game where every guess matters. Find the word, build your streak, and climb the ranks.",
   openGraph: {
-    title: "WordRush — The Word Game That Keeps You Guessing",
-    description:
-      "Guess words, build streaks, and prove your vocabulary. How long can you keep your streak alive?",
+    title: "WordRush — Guess. Think. Win.",
+    description: "Find the word. Build your streak. Climb the ranks.",
     type: "website",
     siteName: "WordRush",
   },
   twitter: {
     card: "summary_large_image",
-    title: "WordRush — The Word Game That Keeps You Guessing",
-    description:
-      "Guess words, build streaks, and prove your vocabulary. How long can you keep your streak alive?",
-  },
-  robots: {
-    index: true,
-    follow: true,
+    title: "WordRush — Guess. Think. Win.",
+    description: "Find the word. Build your streak. Climb the ranks.",
   },
 };
 
