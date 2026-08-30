@@ -23,8 +23,35 @@ const poppins = Unbounded({
 });
 
 export const metadata: Metadata = {
-  title: "ARIWA - Guess and Win!",
-  description: "Guess the word!",
+  title: "WordRush — The Word Game That Keeps You Guessing",
+  description:
+    "Guess words, build streaks, and prove your vocabulary in WordRush — a fast, addictive word game where every guess counts.",
+  keywords: [
+    "WordRush",
+    "word game",
+    "word guessing game",
+    "vocabulary game",
+    "daily word game",
+    "word puzzle",
+    "guess the word",
+  ],
+  openGraph: {
+    title: "WordRush — The Word Game That Keeps You Guessing",
+    description:
+      "Guess words, build streaks, and prove your vocabulary. How long can you keep your streak alive?",
+    type: "website",
+    siteName: "WordRush",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WordRush — The Word Game That Keeps You Guessing",
+    description:
+      "Guess words, build streaks, and prove your vocabulary. How long can you keep your streak alive?",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

@@ -212,6 +212,9 @@ export default function CasualGameMode() {
       setTimeout(() => {
         confetti({
           angle: 80,
+          origin: {
+            y: 0,
+          },
         });
         setGameover(true);
         playSound("hint");
@@ -248,7 +251,7 @@ export default function CasualGameMode() {
 
   return (
     <div
-      className="flex justify-center items-center flex-col  bg-background gap-6 min-h-[calc(100vh-6em)] overflow-x-hidden py-6 pb-18 px-3 relative"
+      className="flex justify-center items-center flex-col  bg-background gap-6 min-h-[calc(100vh-6em)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative"
       onClick={() => {
         if (keyboardRef.current) keyboardRef.current.focus();
       }}
@@ -261,6 +264,22 @@ export default function CasualGameMode() {
             }}
             animate={{
               opacity: 0.9,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="bg-background  fixed top-0 left-0 h-screen w-screen duration-200 z-9999"
+          ></motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {gameover && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 0.6,
             }}
             exit={{
               opacity: 0,
@@ -308,7 +327,7 @@ export default function CasualGameMode() {
         ></Keyboard>
         <motion.div
           style={{
-            height: settings ? "50vh" : gameover ? "150%" : "56px",
+            height: settings ? "50vh" : gameover ? "100%" : "56px",
           }}
           onClick={() => {
             setSettings((x) => !x);
@@ -328,18 +347,12 @@ export default function CasualGameMode() {
                   transition={{
                     delay: 0.3,
                   }}
-                  className="flex flex-col justify-between items-between h-full p-3 w-full text-center"
+                  className="flex flex-col justify-end gap-6 items-n h-full p-3 w-full text-center"
                 >
                   <div className="text-2xl font text-green  ">
                     Guessed it right!
                   </div>
-                  <div className="flex justify-center items-center h-full">
-                    <PartyPopper
-                      className="text-green "
-                      size={66}
-                    ></PartyPopper>
-                  </div>
-                  <div className="flex flex-col justify-end items-end gap-3  h-full w-full ">
+                  <div className="flex --flex-col justify-end items-end gap-3   w-full ">
                     <button className="bg-background rounded-md p-3 w-full flex justify-center items-center gap-2">
                       Options <Menu size={18}></Menu>
                     </button>
@@ -347,7 +360,6 @@ export default function CasualGameMode() {
                       New Word <ChevronRight size={18}></ChevronRight>
                     </button>
                   </div>
-                  <div></div>
                 </motion.div>
               ) : lose ? (
                 <></>
