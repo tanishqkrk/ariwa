@@ -21,7 +21,7 @@ import {
 function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
   return (
     <div
-      className={`rounded-4xl w-5/6 h-full border-4 relative overflow-hidden flex flex-col justify-between items-center gap-3  p-6 ${mode.color}`}
+      className={`rounded-4xl w-5/6 h-full border-4 relative overflow-hidden flex flex-col justify-between items-center gap-3  p-6  ${mode.color}`}
     >
       <div className="space-y-3 z-99 flex flex-col justify-center items-center">
         <div className="text-2xl text-center z-99 font-semibold">
@@ -50,7 +50,7 @@ function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
 
 export default function Page() {
   return (
-    <main className="space-y-8 flex-col flex justify-between min-h-[calc(100dvh-8rem)] p-3">
+    <main className="space-y-8 flex-col flex justify-between min-h-[calc(100dvh)] p-3 pt-[8rem]">
       <div className="space-y-8 flex flex-col justify-between h-full">
         <div className="title">Quick Play</div>
         <div id="quickGames" className="relative">

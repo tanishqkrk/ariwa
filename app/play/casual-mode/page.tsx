@@ -334,10 +334,10 @@ export default function CasualGameMode() {
         ></Keyboard>
         <motion.div
           style={{
-            height: settings ? "50vh" : gameover ? "100%" : "56px",
+            height: settings ? "50vh" : gameover ? "80%" : "56px",
           }}
           onClick={() => {
-            setSettings((x) => !x);
+            if (!gameover) setSettings((x) => !x);
           }}
           className={`rounded-xl  w-[95%] left-1/2 -translate-x-1/2 p-4 text-sm flex gap-3 justify-center items-center text-foreground absolute -bottom-16 duration-300 ease-in-out z-99999 ${win ? "bg-foreground" : lose ? "bg-foreground" : "bg-foreground"}`}
         >
@@ -360,10 +360,15 @@ export default function CasualGameMode() {
                     Guessed it right!
                   </div>
                   <div className="flex --flex-col justify-end items-end gap-3   w-full ">
-                    <button className="bg-background rounded-md p-3 w-full flex justify-center items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setSettings((x) => !x);
+                      }}
+                      className="bg-background rounded-md p-3 w-full flex justify-center items-center gap-2"
+                    >
                       Options <Menu size={18}></Menu>
                     </button>
-                    <button className="bg-green rounded-md p-3 w-full flex justify-center items-center gap-2">
+                    <button className="bg-green rounded-md p-3 w-full flex justify-center items-center gap-2 text-background">
                       New Word <ChevronRight size={18}></ChevronRight>
                     </button>
                   </div>
