@@ -258,7 +258,7 @@ export default function CasualGameMode() {
 
   return (
     <div
-      className="flex justify-center items-center flex-col  bg-background gap-6 min-h-[calc(100vh-6em)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative"
+      className="flex justify-center items-center flex-col  bg-background gap-6 min-h-[calc(100vh-6em)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative pt-36"
       onClick={() => {
         if (keyboardRef.current) keyboardRef.current.focus();
       }}

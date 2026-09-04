@@ -21,16 +21,20 @@ import {
 function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
   return (
     <div
-      className={`rounded-4xl w-5/6 h-full border-4 relative overflow-hidden flex flex-col justify-between items-center gap-3  p-6  ${mode.color}`}
+      className={`rounded-4xl w-full --border-4 h-full  relative overflow-hidden flex flex-col justify-between items-center gap-3  p-6  ${mode.color}`}
     >
-      <div className="space-y-3 z-99 flex flex-col justify-center items-center">
+      <div className="space-y-3 z-99 flex flex-col justify-center items-center text-white">
         <div className="text-2xl text-center z-99 font-semibold">
           {mode.title}
         </div>
         <div className="text-center text-sm z-99  ">{mode.description}</div>
       </div>
       <div className="flex justify-center items-center">
-        <mode.icon size={160} className=" text-background "></mode.icon>
+        {mode.img ? (
+          <img className="" src={mode.img}></img>
+        ) : (
+          <mode.icon size={160} className=" text-background "></mode.icon>
+        )}
       </div>
       <Link href={"/play/" + mode.slug} className="w-full">
         <motion.button
@@ -38,7 +42,7 @@ function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
             scale: 0.97,
           }}
           disabled={mode.disabled}
-          className="border-2 border-foreground bg-foreground text-background p-3 py-4 z-999 rounded-full w-full flex items-center justify-center gap-2 hover:bg-background hover:text-foreground capitalize disabled:opacity-50 text-sm"
+          className="border-2 shadow-xl shadow-black/40 border-foreground bg-foreground text-background p-3 py-4 z-999 rounded-full w-full flex items-center justify-center gap-2 hover:bg-background hover:text-foreground capitalize disabled:opacity-80 text-sm"
         >
           {mode.disabled ? "Coming soon" : mode.cta}{" "}
           <ChevronRight></ChevronRight>
@@ -50,7 +54,7 @@ function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
 
 export default function Page() {
   return (
-    <main className="space-y-8 flex-col flex justify-between min-h-[calc(100dvh)] p-3 pt-[8rem]">
+    <main className="space-y-8 flex-col flex justify-between min-h-[calc(100dvh)] py-3 --pt-20">
       <div className="space-y-8 flex flex-col justify-between h-full">
         <div className="title">Quick Play</div>
         <div id="quickGames" className="relative">
@@ -59,10 +63,12 @@ export default function Page() {
             opts={{
               loop: true,
               align: "center",
-              slidesToScroll: 1,
+
+              // slidesToScroll: 1,
             }}
             plugins={[
               Autoplay({
+                // delay: 200000,
                 delay: 2000,
               }),
             ]}
@@ -77,7 +83,7 @@ export default function Page() {
                 return (
                   <CarouselItem
                     key={mode.id}
-                    className="flex justify-center items-center"
+                    className="flex justify-center items-center basis-4/5"
                   >
                     <QuickPlayCard mode={mode} />
                   </CarouselItem>

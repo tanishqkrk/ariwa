@@ -13,7 +13,7 @@ export default function AllModesPage() {
   const [gameType, setGameType] = useState<"sp" | "mp">("sp");
 
   return (
-    <div className="space-y-6 p-3">
+    <div className="space-y-6 p-3 pt-20">
       <div className="flex gap-3 justify-start items-center">
         <Link href={"/"}>
           <ChevronLeft size={50}></ChevronLeft>

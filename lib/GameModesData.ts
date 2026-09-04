@@ -11,6 +11,7 @@ export interface GameModeDisplay {
   title: string;
   id: string;
   icon: React.FC<LucideProps>;
+  img?: string;
   description: string;
   slug: string;
   cta: string;
@@ -26,8 +27,9 @@ export const SinglePlayerGameModes: GameModeDisplay[] = [
     description: "One word per day for you to dwell upon",
     slug: "daily-word",
     cta: "Guess today's word",
-    color: "bg-yellow-500",
-    disabled: true,
+    color: "bg-gradient-to-b from-sky-700 to-blue-600",
+    // disabled: true,
+    img: "/daily.png",
   },
   {
     title: "Race Against Time",
@@ -36,8 +38,9 @@ export const SinglePlayerGameModes: GameModeDisplay[] = [
     description: "Guess as many words as you can under a time limit",
     slug: "race-against-time",
     cta: "Start guessing",
-    color: "bg-green-400",
-    disabled: true,
+    color: "bg-gradient-to-b from-green-600 to-lime-500",
+    img: "/race.png",
+    // disabled: true,
   },
   {
     title: "Casual",
@@ -46,7 +49,8 @@ export const SinglePlayerGameModes: GameModeDisplay[] = [
     description: "No pressure, no points, just have some fun!",
     slug: "casual-mode",
     cta: "Have fun",
-    color: "bg-pink-400",
+    color: "bg-gradient-to-b from-purple-600 to-fuchsia-400",
+    img: "/casual.png",
   },
   {
     title: "Scale Up",
@@ -56,7 +60,7 @@ export const SinglePlayerGameModes: GameModeDisplay[] = [
     slug: "scale-up",
     cta: "Play Now",
     color: "bg-teal-400",
-    disabled: true,
+    // disabled: true,
   },
 ];
 export const MultiPlayerGameModes: GameModeDisplay[] = [
@@ -67,7 +71,8 @@ export const MultiPlayerGameModes: GameModeDisplay[] = [
     description: "Clash against othher players to come on top",
     slug: "casual-mode",
     cta: "Clash",
-    color: "bg-red-400",
+    color: "bg-gradient-to-b from-orange-500 to-red-500",
     disabled: true,
+    img: "/battle3.png",
   },
 ];
