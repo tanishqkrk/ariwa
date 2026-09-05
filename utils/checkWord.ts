@@ -11,7 +11,10 @@ const wordExists = (text: string) => {
       ? (dictionary as any)[cleaned.slice(0, 2)] &&
         (dictionary as any)[cleaned.slice(0, 2)].includes(cleaned)
       : cleaned === "a" || cleaned === "i") ||
-    words.map((w) => w.word).includes(text)
+    (words.map((w) => w.word).includes(text) &&
+      words.filter(
+        (x) => x.word.toLocaleLowerCase() === cleaned.toLocaleLowerCase(),
+      ))
   );
 };
 

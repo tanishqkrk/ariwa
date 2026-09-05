@@ -173,14 +173,14 @@ export const Key = memo(function KeyComponent({
     <motion.div
       key={letter}
       onClick={() => {
+        if (letter !== "Enter" && letter !== "Backspace") {
+          addLetter(letter.toUpperCase());
+        }
         if (letter === "Backspace") {
           if (removeLetter) removeLetter();
         }
         if (letter === "Enter") {
           if (submitAttempt) submitAttempt();
-        }
-        if (letter !== "Enter" && letter !== "Backspace") {
-          addLetter(letter.toUpperCase());
         }
       }}
       whileTap={{
@@ -189,7 +189,10 @@ export const Key = memo(function KeyComponent({
       animate={{
         scale: lastPressedKey?.toLowerCase() === letter.toLowerCase() ? 0.8 : 1,
       }}
-      className={`p-3    py-3 border border-foreground/30  max-md:text-xs text-sm  min-w-12 max-md:min-w-6 max-md:w-full  max-md:h-16  ${(letter === "Enter" || letter === "Backspace") && "max-md:min-w-13 max-md:text-[.6em]"}  max-md:px-0 w-fit   flex justify-center items-center  rounded-xl max-md:rounded-lg uppercase font-semibold cursor-pointer select-none    
+      transition={{
+        duration: 0.05,
+      }}
+      className={`p-3    py-3 border border-foreground/30  max-md:text-xs text-sm  min-w-12 max-md:min-w-6 max-md:w-full  max-md:h-16  ${(letter === "Enter" || letter === "Backspace") && "max-md:min-w-13 max-md:text-[.6em]"}  max-md:px-0 w-fit   flex justify-center items-center  rounded-xl max-md:rounded-lg uppercase font-semibold cursor-pointer select-none    ${letter === "Enter" && "bg-linear-to-r to-emerald-500 from-green-600 text-white"}
 ${
   lastPressedKey?.toLowerCase() === letter.toLowerCase()
     ? "md:border-foreground/60 bg-foreground/20"

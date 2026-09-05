@@ -229,7 +229,6 @@ export default function CasualGameMode() {
       }, 400);
     }
   }, [life]);
-  console.log(word);
 
   const currentStatus = useMemo(() => {
     const huh = new Array(wordLength).fill("").map((_, i) => {
@@ -258,7 +257,7 @@ export default function CasualGameMode() {
 
   return (
     <div
-      className="flex justify-center items-center flex-col  bg-background gap-6 min-h-[calc(100vh-6em)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative pt-36"
+      className="flex justify-center items-center flex-col  bg-background gap-6 --min-h-[calc(100vh)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative "
       onClick={() => {
         if (keyboardRef.current) keyboardRef.current.focus();
       }}
