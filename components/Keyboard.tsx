@@ -24,7 +24,7 @@ export const Keyboard = memo(function KeyboardComponent({
   return (
     <div
       id="virtual-keyboard"
-      className=" min-h-36 min-w-lg max-md:min-w-fit flex-col space-y-1 max-md:space-y-0.5 max-md:w-screen max-md:px-3 "
+      className=" min-h-36 min-w-lg max-md:min-w-fit flex-col space-y-1 max-md:space-y-0.5 max-md:w-screen max-md:px-1 "
     >
       <motion.div
         initial={{
@@ -59,6 +59,9 @@ export const Keyboard = memo(function KeyboardComponent({
               letter={letter}
               lastPressedKey={lastPressedKey}
               status={statusToPass}
+              onClick={() => {
+                addLetter(letter.toUpperCase());
+              }}
             />
           );
         })}
@@ -95,6 +98,9 @@ export const Keyboard = memo(function KeyboardComponent({
               letter={letter}
               lastPressedKey={lastPressedKey}
               status={statusToPass}
+              onClick={() => {
+                addLetter(letter.toUpperCase());
+              }}
             />
           );
         })}
@@ -118,6 +124,9 @@ export const Keyboard = memo(function KeyboardComponent({
           letter={"Enter"}
           lastPressedKey={lastPressedKey}
           submitAttempt={submitAttempt}
+          onClick={() => {
+            submitAttempt();
+          }}
         />
         {qwertyLettersRow3.map((letter) => {
           let status = letterStatus
@@ -138,6 +147,9 @@ export const Keyboard = memo(function KeyboardComponent({
               letter={letter}
               lastPressedKey={lastPressedKey}
               status={statusToPass}
+              onClick={() => {
+                addLetter(letter.toUpperCase());
+              }}
             />
           );
         })}
@@ -147,6 +159,9 @@ export const Keyboard = memo(function KeyboardComponent({
           removeLetter={removeLetter}
           letter={"Backspace"}
           lastPressedKey={lastPressedKey}
+          onClick={() => {
+            removeLetter();
+          }}
         />
       </motion.div>
     </div>
@@ -160,6 +175,7 @@ export const Key = memo(function KeyComponent({
   status,
   removeLetter,
   submitAttempt,
+  onClick,
 }: {
   letter: string;
   lastPressedKey: string | null;
@@ -167,22 +183,24 @@ export const Key = memo(function KeyComponent({
   removeLetter?: () => void;
   submitAttempt?: () => void;
   status?: string;
+  onClick: () => void;
 }) {
   // console.log(letter.toUpperCase(), status);
   return (
     <motion.div
       key={letter}
-      onClick={() => {
-        if (letter !== "Enter" && letter !== "Backspace") {
-          addLetter(letter.toUpperCase());
-        }
-        if (letter === "Backspace") {
-          if (removeLetter) removeLetter();
-        }
-        if (letter === "Enter") {
-          if (submitAttempt) submitAttempt();
-        }
-      }}
+      onClick={() => onClick()}
+      // onClick={() => {
+      //   if (letter !== "Enter" && letter !== "Backspace") {
+      //     addLetter(letter.toUpperCase());
+      //   }
+      //   if (letter === "Backspace") {
+      //     if (removeLetter) removeLetter();
+      //   }
+      //   if (letter === "Enter") {
+      //     if (submitAttempt) submitAttempt();
+      //   }
+      // }}
       whileTap={{
         scale: 0.85,
       }}
@@ -192,7 +210,7 @@ export const Key = memo(function KeyComponent({
       transition={{
         duration: 0.05,
       }}
-      className={`p-3    py-3 border border-foreground/30  max-md:text-xs text-sm  min-w-12 max-md:min-w-6 max-md:w-full  max-md:h-16  ${(letter === "Enter" || letter === "Backspace") && "max-md:min-w-13 max-md:text-[.6em]"}  max-md:px-0 w-fit   flex justify-center items-center  rounded-xl max-md:rounded-lg uppercase font-semibold cursor-pointer select-none    ${letter === "Enter" && "bg-linear-to-r to-emerald-500 from-green-600 text-white"}
+      className={`p-3 py-3 border border-foreground/30  max-md:text-xs text-sm  min-w-12 max-md:min-w-6 max-md:w-full  max-md:h-16  ${(letter === "Enter" || letter === "Backspace") && "max-md:min-w-13 max-md:text-[.6em]"}  max-md:px-0 w-fit   flex justify-center items-center  rounded-xl max-md:rounded-lg uppercase font-semibold cursor-pointer select-none    ${letter === "Enter" && "bg-linear-to-r to-emerald-500 from-green-600 text-white"}
 ${
   lastPressedKey?.toLowerCase() === letter.toLowerCase()
     ? "md:border-foreground/60 bg-foreground/20"

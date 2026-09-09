@@ -15,8 +15,9 @@ import {
   Gamepad2,
   Search,
   ShoppingCart,
-  // @ts-expect-error add types later ig
   Podium,
+  Trophy,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -62,7 +63,7 @@ function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
 
 export default function Page() {
   return (
-    <main className="space-y-8 flex-col flex justify-between --min-h-[calc(100dvh)] py-3 --pt-20">
+    <main className="space-y-8 flex-col flex justify-between -min-h-[calc(100dvh-8em)] py-3 --pt-20">
       <div className="space-y-8 flex flex-col justify-between h-full ">
         <div className="title px-3">Quick Play</div>
         <div id="quickGames" className="relative">
@@ -111,7 +112,8 @@ export default function Page() {
               }}
               className="bg-linear-to-r from-background to-yellow-50 to- text-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
             >
-              <img src="/shop.png" className="w-8" alt="" />
+              <ShoppingCart></ShoppingCart>
+              {/* <img src="/shop.png" className="w-8" alt="" /> */}
             </motion.button>
             <motion.button
               whileTap={{
@@ -119,7 +121,8 @@ export default function Page() {
               }}
               className="bg-linear-to-r from-background to-yellow-50 text-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
             >
-              <img src="/search2.png" className="w-8 " alt="" />
+              <Search></Search>
+              {/* <img src="/search2.png" className="w-8 " alt="" /> */}
             </motion.button>
             <motion.button
               whileTap={{
@@ -127,7 +130,8 @@ export default function Page() {
               }}
               className="bg-linear-to-r from-background to-yellow-50 text-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
             >
-              <img src="/trophy2.png" className="w-8" alt="" />
+              <Trophy></Trophy>
+              {/* <img src="/trophy2.png" className="w-8" alt="" /> */}
             </motion.button>
           </div>
           <Link href="/all-modes">
@@ -137,8 +141,9 @@ export default function Page() {
               }}
               className="bg-linear-to-r to-emerald-500 from-green-600 w-fit p-3 rounded-full text-background flex justify-center items-center gap-2 "
             >
-              <img src="/game.png" className="w-8 " alt="" />{" "}
-              <span className="whitespace-nowrap">Game Modes</span>
+              <ChevronRight></ChevronRight>
+              {/* <img src="/game.png" className="w-6" alt="" />{" "} */}
+              <span className="whitespace-nowrap text-xs">Game Modes</span>
             </motion.div>
           </Link>
         </div>

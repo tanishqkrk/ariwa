@@ -1,5 +1,16 @@
 "use client";
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/Drawer";
+
 import GameGridComponent from "@/components/GameGrid";
 import { Keyboard } from "@/components/Keyboard";
 import { playSound } from "@/lib/sounds";
@@ -7,10 +18,22 @@ import wordExists from "@/utils/checkWord";
 import { generateRandomWord } from "@/utils/generateRandomWord";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ChevronRight, Crown, Menu, PartyPopper, Trophy } from "lucide-react";
+import {
+  ChevronRight,
+  Crown,
+  GamepadIcon,
+  Laptop,
+  Menu,
+  Moon,
+  PartyPopper,
+  Settings,
+  Sun,
+  Trophy,
+} from "lucide-react";
 import confetti from "canvas-confetti";
 
 export default function CasualGameMode() {
+  let selectedTheme = "light";
   const [currentIndex, setCurrentIndex] = useState(0);
   const [settings, setSettings] = useState(false);
   const [wordLength, setWordLength] = useState(5);
@@ -262,22 +285,79 @@ export default function CasualGameMode() {
         if (keyboardRef.current) keyboardRef.current.focus();
       }}
     >
-      <AnimatePresence>
-        {settings && (
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 0.9,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            className="bg-background  fixed top-0 left-0 h-screen w-screen duration-200 z-9999"
-          ></motion.div>
-        )}
-      </AnimatePresence>
+      <div className="options flex justify-end items-center w-full gap-2">
+        <motion.button
+          whileTap={{
+            scale: 0.91,
+          }}
+          className="bg-linear-to-r from-blue-600 to-sky-700 text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3"
+        >
+          <GamepadIcon></GamepadIcon>
+          {/* <img className="w-7" src="/customize.png" alt="" /> */}
+          <div>Customize Game</div>
+        </motion.button>
+
+        <Drawer>
+          <DrawerTrigger
+            render={
+              <motion.button
+                onClick={() => {
+                  setSettings(true);
+                }}
+                whileTap={{
+                  scale: 0.91,
+                }}
+                className="bg-linear-to-r from-zinc-700 to-black text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3"
+              >
+                <Settings></Settings>
+                <div>Settings</div>
+              </motion.button>
+            }
+          ></DrawerTrigger>
+          <DrawerContent className={"bg-white border-none rounded-xl"}>
+            <DrawerHeader>
+              <DrawerTitle className={"text-start "}>Settings</DrawerTitle>
+              <DrawerDescription className={"text-start text-black/70"}>
+                Change the overall website's settings.
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="p-4 space-y-3">
+              <div>Appearance</div>
+              <div className="grid grid-cols-3 gap-3">
+                {["light", "dark", "system"].map((x) => {
+                  return (
+                    <motion.button
+                      whileTap={{
+                        scale: 0.95,
+                      }}
+                      onClick={() => {}}
+                      key={x}
+                      className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${selectedTheme !== x ? "border-foreground/20  text-foreground/70" : "bg-green/15 border-green text-green"}`}
+                    >
+                      {x === "light" ? (
+                        <Sun></Sun>
+                      ) : x === "dark" ? (
+                        <Moon></Moon>
+                      ) : (
+                        <Laptop></Laptop>
+                      )}
+
+                      <div className="uppercase text-xs ">{x}</div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </div>
+            <DrawerFooter>
+              <button className="bg-linear-to-r from-blue-600 to-sky-700 p-3 rounded-lg text-white">
+                Save
+              </button>
+              <DrawerClose render={<button />}>Cancel</DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+
       <AnimatePresence>
         {gameover && (
           <motion.div
@@ -302,8 +382,8 @@ export default function CasualGameMode() {
         life={life}
         wordLength={wordLength}
       ></GameGridComponent>
-      {!gameover ? (
-        <div className="flex text-correct  min-h-10 gap-px text-xl">
+      {gameover ? (
+        <div className="flex text-correct  min-h-10 gap-2 text-xl">
           {word.split("").map((x, i) => {
             if (x) {
               return <p key={i}>{x}</p>;
@@ -313,7 +393,7 @@ export default function CasualGameMode() {
           })}
         </div>
       ) : (
-        <div className="flex text-correct  min-h-10 gap-px text-xl">
+        <div className="flex text-correct  min-h-10 gap-2 text-xl">
           {currentStatus.map((x, i) => {
             if (x) {
               return <p key={i}>{x}</p>;
@@ -331,62 +411,6 @@ export default function CasualGameMode() {
           letterStatus={attempts.flat().filter((x) => x.letter && x.status)}
           submitAttempt={submitAttempt}
         ></Keyboard>
-        <motion.div
-          style={{
-            height: settings ? "50vh" : gameover ? "80%" : "56px",
-          }}
-          onClick={() => {
-            if (!gameover) setSettings((x) => !x);
-          }}
-          className={`rounded-xl  w-[95%] left-1/2 -translate-x-1/2 p-4 text-sm flex gap-3 justify-center items-center text-foreground absolute -bottom-16 duration-300 ease-in-out z-99999 ${win ? "bg-foreground" : lose ? "bg-foreground" : "bg-foreground"}`}
-        >
-          <AnimatePresence>
-            {gameover ? (
-              win ? (
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                  }}
-                  animate={{
-                    opacity: 1,
-                  }}
-                  transition={{
-                    delay: 0.3,
-                  }}
-                  className="flex flex-col justify-end gap-6 items-n h-full p-3 w-full text-center"
-                >
-                  <div className="text-2xl font text-green  ">
-                    Guessed it right!
-                  </div>
-                  <div className="flex --flex-col justify-end items-end gap-3   w-full ">
-                    <button
-                      onClick={() => {
-                        setSettings((x) => !x);
-                      }}
-                      className="bg-background rounded-md p-3 w-full flex justify-center items-center gap-2"
-                    >
-                      Options <Menu size={18}></Menu>
-                    </button>
-                    <button className="bg-green rounded-md p-3 w-full flex justify-center items-center gap-2 text-background">
-                      New Word <ChevronRight size={18}></ChevronRight>
-                    </button>
-                  </div>
-                </motion.div>
-              ) : lose ? (
-                <></>
-              ) : (
-                <></>
-              )
-            ) : settings ? (
-              <></>
-            ) : (
-              <div className="flex items-center justify-between w-full text-background">
-                <Menu></Menu>
-                Options
-              </div>
-            )}
-          </AnimatePresence>
-        </motion.div>
       </div>
       <input
         readOnly

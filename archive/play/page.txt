@@ -23,3 +23,61 @@ export default function Home() {
     </>
   );
 }
+
+
+<motion.div
+          style={{
+            height: settings ? "50vh" : gameover ? "80%" : "56px",
+          }}
+          onClick={() => {
+            if (!gameover) setSettings((x) => !x);
+          }}
+          className={`hidden rounded-xl  w-[95%] left-1/2 -translate-x-1/2 p-4 text-sm flex gap-3 justify-center items-center text-foreground absolute -bottom-16 duration-300 ease-in-out z-99999 ${win ? "bg-foreground" : lose ? "bg-foreground" : "bg-foreground"}`}
+        >
+          <AnimatePresence>
+            {gameover ? (
+              win ? (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    delay: 0.3,
+                  }}
+                  className="flex flex-col justify-end gap-6 items-n h-full p-3 w-full text-center"
+                >
+                  <div className="text-2xl font text-green  ">
+                    Guessed it right!
+                  </div>
+                  <div className="flex --flex-col justify-end items-end gap-3   w-full ">
+                    <button
+                      onClick={() => {
+                        setSettings((x) => !x);
+                      }}
+                      className="bg-background rounded-md p-3 w-full flex justify-center items-center gap-2"
+                    >
+                      Options <Menu size={18}></Menu>
+                    </button>
+                    <button className="bg-green rounded-md p-3 w-full flex justify-center items-center gap-2 text-background">
+                      New Word <ChevronRight size={18}></ChevronRight>
+                    </button>
+                  </div>
+                </motion.div>
+              ) : lose ? (
+                <></>
+              ) : (
+                <></>
+              )
+            ) : settings ? (
+              <></>
+            ) : (
+              <div className="flex items-center justify-between w-full text-background">
+                <Menu></Menu>
+                Options
+              </div>
+            )}
+          </AnimatePresence>
+        </motion.div>

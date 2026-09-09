@@ -47,7 +47,7 @@ const GameGridComponent = memo(function GameGridComponent({
                   className={`h-16 ${
                     letterSizeForMobile[wordLength]
                   } aspect-square   text-center flex justify-center items-center text-xl max-md:text-xl font-bold rounded-xl  
-                  border border-foreground/50
+                  border border-foreground/30
                         ${
                           j === life
                             ? word.letter === ""
@@ -64,7 +64,7 @@ const GameGridComponent = memo(function GameGridComponent({
                         ${
                           j === life
                             ? currentIndex === i
-                              ? "bg-foreground/30"
+                              ? "bg-foreground/30 "
                               : "bg-foreground/10 "
                             : ""
                         } duration-100 `}
