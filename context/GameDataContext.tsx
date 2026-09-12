@@ -11,19 +11,13 @@ import {
 const GameDataContext = createContext<{} | null>(null);
 
 function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
-  type LocalGameSettingsType = {
-    selectedTheme: "light" | "dark" | "system";
-  };
-
-  const [localGameData, setLocalGameData] = useState<LocalGameSettingsType>({
-    selectedTheme: "dark",
-  });
-
-  localStorage.setItem("selectedTheme", "light");
-
-  function getGameSettingsDataFromLocalStorageOnPageLoad() {
-    setLocalGameData(() => ({ ...localStorage }));
+  function getLocalGameStateData(key: string) {
+    return "";
   }
+
+  // localStorage.setItem("selectedTheme", "light");
+
+  function getGameSettingsDataFromLocalStorageOnPageLoad() {}
 
   useEffect(() => {
     getGameSettingsDataFromLocalStorageOnPageLoad();
@@ -32,7 +26,7 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
   // console.log(localGameData);
 
   return (
-    <GameDataContext.Provider value={{ localGameData }}>
+    <GameDataContext.Provider value={{ getLocalGameStateData }}>
       {children}
     </GameDataContext.Provider>
   );
