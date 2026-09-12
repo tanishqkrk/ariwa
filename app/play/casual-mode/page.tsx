@@ -31,6 +31,7 @@ import {
   Trophy,
 } from "lucide-react";
 import confetti from "canvas-confetti";
+import useGameData, { GameDataProvider } from "@/context/GameDataContext";
 
 export default function CasualGameMode() {
   let selectedTheme = "light";
@@ -278,6 +279,8 @@ export default function CasualGameMode() {
     return finalArray;
   }, [attempts]);
 
+  const { getLocalGameStateData } = useGameData()!;
+
   return (
     <div
       className="flex justify-center items-center flex-col  bg-background gap-6 --min-h-[calc(100vh)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative "
@@ -332,7 +335,7 @@ export default function CasualGameMode() {
                       }}
                       onClick={() => {}}
                       key={x}
-                      className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${selectedTheme !== x ? "border-foreground/20  text-foreground/70" : "bg-green/15 border-green text-green"}`}
+                      className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${getLocalGameStateData("selected_theme") !== x ? "border-foreground/20  text-foreground/70" : "bg-green/15 border-green text-green"}`}
                     >
                       {x === "light" ? (
                         <Sun></Sun>
