@@ -52,7 +52,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className="overflow-x-hidden dark  bg-background   text-foreground dark:text-background   dark:bg-foreground"
+      className="overflow-x-hidden   bg-background   text-foreground dark:text-background   dark:bg-foreground"
       lang="en"
     >
       <GameDataProvider>
