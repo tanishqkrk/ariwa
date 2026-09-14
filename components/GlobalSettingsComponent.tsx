@@ -43,7 +43,7 @@ export default function GlobalSettingsComponent({
               whileTap={{
                 scale: 0.91,
               }}
-              className="bg-linear-to-r from-zinc-700 to-black text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3 font-unbounded-sans"
+              className="bg-linear-to-r from-zinc-900 to-black dark:from-zinc-100 dark:to-white text-background dark:text-foreground rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3 font-unbounded-sans"
             >
               <Settings></Settings>
               <div>Settings</div>
