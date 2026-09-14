@@ -28,19 +28,8 @@ export const SinglePlayerGameModes: GameModeDisplay[] = [
     slug: "daily-word",
     cta: "Guess today's word",
     color: "bg-gradient-to-b from-sky-700 to-blue-600",
-    // disabled: true,
+    disabled: true,
     img: "/daily.png",
-  },
-  {
-    title: "Race Against Time",
-    id: "race-against-time",
-    icon: AlarmClock,
-    description: "Guess as many words as you can under a time limit",
-    slug: "race-against-time",
-    cta: "Start guessing",
-    color: "bg-gradient-to-b from-green-600 to-lime-500",
-    img: "/race.png",
-    // disabled: true,
   },
   {
     title: "Casual",
@@ -52,6 +41,18 @@ export const SinglePlayerGameModes: GameModeDisplay[] = [
     color: "bg-gradient-to-b from-purple-600 to-fuchsia-400",
     img: "/casual.png",
   },
+  {
+    title: "Race Against Time",
+    id: "race-against-time",
+    icon: AlarmClock,
+    description: "Guess as many words as you can under a time limit",
+    slug: "race-against-time",
+    cta: "Start guessing",
+    color: "bg-gradient-to-b from-green-600 to-lime-500",
+    img: "/race.png",
+    disabled: true,
+  },
+
   // {
   //   title: "Scale Up",
   //   id: "scale-up",
@@ -72,7 +73,7 @@ export const MultiPlayerGameModes: GameModeDisplay[] = [
     slug: "casual-mode",
     cta: "Clash",
     color: "bg-gradient-to-b from-orange-500 to-red-500",
-    // disabled: true,
+    disabled: true,
     img: "/battle3.png",
   },
 ];

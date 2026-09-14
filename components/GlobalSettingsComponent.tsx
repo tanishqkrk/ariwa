@@ -24,6 +24,7 @@ import {
 import useGameData from "@/context/GameDataContext";
 import { ReactElement } from "react";
 import { Label } from "./ui/Label";
+import { Slider } from "./ui/Slider";
 
 export default function GlobalSettingsComponent({
   trigger,
@@ -53,7 +54,7 @@ export default function GlobalSettingsComponent({
       ></DrawerTrigger>
       <DrawerContent
         className={
-          "bg-background   text-foreground dark:text-background   dark:bg-foreground border-none rounded-xl font-unbounded-sans z-999999999999 "
+          "bg-white   text-foreground dark:text-background   dark:bg-black border-none rounded-xl font-unbounded-sans z-999999999999 "
         }
       >
         <DrawerHeader>
@@ -86,7 +87,7 @@ export default function GlobalSettingsComponent({
                     }
                   }}
                   key={x}
-                  className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${gameSettings.selected_theme !== x ? "border-foreground/20 dark:border-background/20  bg-background   text-foreground dark:text-background   dark:bg-foreground" : "bg-green/15 border-green text-green"} disabled:opacity-45`}
+                  className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${gameSettings.selected_theme !== x ? "border-foreground/20 dark:border-background/20  bg-white   text-foreground dark:text-background   dark:bg-foreground" : "bg-green/15 border-green text-green"} disabled:opacity-45`}
                 >
                   {x === "light" ? (
                     <Sun></Sun>
@@ -119,9 +120,52 @@ export default function GlobalSettingsComponent({
                 </div>
               </div>
               <div className="">
-                <Switch id="keyboard_animations" className={"scale-125"} />
+                <Switch
+                  onCheckedChange={(e) => {
+                    setLocalGameStateData("keyboard_animations", e.toString());
+                    console.log(e);
+                  }}
+                  checked={
+                    gameSettings.keyboard_animations === "true" ? true : false
+                  }
+                  id="keyboard_animations"
+                  className={"scale-125"}
+                />
               </div>
             </Label>
+            <Label
+              htmlFor="confetti"
+              className="min-w-full flex items-center justify-start gap-3 p-3"
+            >
+              <div className="w-fit ">
+                <PartyPopper></PartyPopper>
+              </div>
+              <div className="w-full">
+                <div className="text-xs">Confetti</div>
+                <div className="font-google-sans text-xs text-foreground/60 dark:text-background/60">
+                  Celebrate when you guess correctly
+                </div>
+              </div>
+              <div className="">
+                <Switch
+                  onCheckedChange={(e) => {
+                    setLocalGameStateData("confetti", e.toString());
+                    console.log(e);
+                  }}
+                  checked={gameSettings.confetti === "true" ? true : false}
+                  id="confetti"
+                  className={"scale-125"}
+                />
+              </div>
+            </Label>
+            <div className="min-w-full flex items-center justify-start gap-3 p-3 ">
+              <Slider
+                defaultValue={[100]}
+                max={100}
+                step={1}
+                className="mx-auto w-full max-w-xs "
+              />
+            </div>
           </div>
         </div>
         <DrawerFooter>

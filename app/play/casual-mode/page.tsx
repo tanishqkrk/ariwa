@@ -24,6 +24,8 @@ import useGameData, { GameDataProvider } from "@/context/GameDataContext";
 import GlobalSettingsComponent from "@/components/GlobalSettingsComponent";
 
 export default function CasualGameMode() {
+  const { gameSettings } = useGameData()!;
+
   let selectedTheme = "light";
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordLength, setWordLength] = useState(5);
@@ -223,19 +225,18 @@ export default function CasualGameMode() {
       }, 400);
     } else if (latestAttempt) {
       setTimeout(() => {
-        confetti({
-          // particleCount: 7,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 },
-        });
-        // and launch a few from the right edge
-        confetti({
-          // particleCount: 7,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 },
-        });
+        if (gameSettings.confetti === "true" ? true : false) {
+          confetti({
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+          });
+          confetti({
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+          });
+        }
         setGameover(true);
         playSound("hint");
         setWin(true);
@@ -313,7 +314,7 @@ export default function CasualGameMode() {
         life={life}
         wordLength={wordLength}
       ></GameGridComponent>
-      {gameover ? (
+      {!gameover ? (
         <div className="flex text-correct  min-h-10 gap-2 text-xl">
           {word.split("").map((x, i) => {
             if (x) {

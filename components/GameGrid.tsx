@@ -47,25 +47,25 @@ const GameGridComponent = memo(function GameGridComponent({
                   className={`h-16 ${
                     letterSizeForMobile[wordLength]
                   } aspect-square   text-center flex justify-center items-center text-xl max-md:text-xl font-bold rounded-xl  
-                  border border-foreground/30 dark:border-background/30
+                  border border-foreground/30 dark:border-background/50
                         ${
                           j === life
                             ? word.letter === ""
-                              ? "text-foreground"
-                              : "bg-foreground/10 text-foreground"
+                              ? "text-foreground dark:text-background"
+                              : "bg-foreground/10 text-foreground dark:text-background"
                             : word.status === "CORRECT"
                               ? "bg-green text-background"
                               : word.status === "INCORRECT"
-                                ? "bg-foreground/60 text-background opacity-50 "
+                                ? "bg-foreground/60 text-background opacity-50 dark:opacity-40 "
                                 : word.status === "EXISTS"
                                   ? "bg-yellow text-foreground "
-                                  : "bg-foreground/20"
+                                  : "bg-foreground/20 dark:bg-background/5"
                         }
                         ${
                           j === life
                             ? currentIndex === i
-                              ? "bg-foreground/30 "
-                              : "bg-foreground/10 "
+                              ? "bg-foreground/30 dark:bg-background/30"
+                              : "bg-foreground/10 dark:bg-background/15"
                             : ""
                         } duration-100 `}
                 >

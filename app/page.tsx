@@ -63,7 +63,7 @@ function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
   );
 }
 
-export default function Page() {
+function Page() {
   return (
     <main className="space-y-8 flex-col flex justify-between -min-h-[calc(100dvh-8em)] py-3 --pt-20 ">
       <div className="space-y-8 flex flex-col justify-between h-full ">
@@ -161,4 +161,8 @@ export default function Page() {
       </div>
     </main>
   );
+}
+
+export default function HomePage() {
+  return <Page />;
 }

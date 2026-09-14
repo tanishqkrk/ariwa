@@ -61,11 +61,25 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
     ).forEach((x) => {
       if (!getLocalGameStateData(x)) {
         setLocalGameStateData(x, default_values[x]);
+      } else {
+        setLocalGameStateData(x, getLocalGameStateData(x) as string);
       }
     });
   }
 
+  function setupTheme() {
+    const theme = getLocalGameStateData("selected_theme");
+    if (theme === "dark") {
+      document.querySelector("html")?.classList.add("dark");
+    } else if (theme === "dark") {
+      document.querySelector("html")?.classList.remove("dark");
+    }
+
+    return true;
+  }
+
   useEffect(() => {
+    setupTheme();
     setupInitalLocalGameState();
   }, []);
 
