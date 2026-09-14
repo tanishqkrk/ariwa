@@ -20,6 +20,9 @@ import {
   PartyPopper,
   Settings,
   Sun,
+  Volume,
+  Volume1,
+  Volume2,
 } from "lucide-react";
 import useGameData from "@/context/GameDataContext";
 import { ReactElement } from "react";
@@ -106,6 +109,22 @@ export default function GlobalSettingsComponent({
         <div className="p-4 space-y-3 ">
           <div>Game preferences</div>
           <div className="py-3 border-foreground/20 dark:border-background/20 border rounded-lg divide-y-2 divide-foreground/10 space-y-2">
+            <div className="min-w-full flex items-start justify-start gap-3 p-3 flex-col">
+              <div className="w-full flex items-center gap-3">
+                <Volume2></Volume2>
+                <div className="text-xs">Volume</div>
+              </div>
+              <Slider
+                onValueChange={(e) => {
+                  console.log(e);
+                }}
+                defaultValue={[100]}
+                max={100}
+                step={1}
+                min={0}
+                className=" w-full  "
+              />
+            </div>
             <Label
               htmlFor="keyboard_animations"
               className="min-w-full flex items-center justify-start gap-3 p-3"
@@ -158,14 +177,6 @@ export default function GlobalSettingsComponent({
                 />
               </div>
             </Label>
-            <div className="min-w-full flex items-center justify-start gap-3 p-3 ">
-              <Slider
-                defaultValue={[100]}
-                max={100}
-                step={1}
-                className="mx-auto w-full max-w-xs "
-              />
-            </div>
           </div>
         </div>
         <DrawerFooter>
