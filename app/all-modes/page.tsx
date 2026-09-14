@@ -27,16 +27,16 @@ export default function AllModesPage() {
         defaultValue={"sp"}
         className=" flex flex-col w-full"
       >
-        <TabsList className="w-full bg-white  p-2 rounded-full">
+        <TabsList className="w-full bg-white dark:bg-black  p-2 rounded-full">
           <TabsTrigger
             value="sp"
-            className={`w-full rounded-full p-3 py-5 text-foreground   ${gameType === "sp" && "bg-yellow  shadow-xl"}`}
+            className={`w-full rounded-full p-3 py-5 text-foreground     ${gameType === "sp" ? "bg-yellow  shadow-xl text-foreground" : "dark:text-background"}`}
           >
             Single Player
           </TabsTrigger>
           <TabsTrigger
             value="mp"
-            className={`w-full rounded-full p-3 py-5 text-foreground ${gameType === "mp" && "bg-yellow  shadow-xl"}`}
+            className={`w-full rounded-full p-3 py-5 text-foreground ${gameType === "mp" ? "bg-yellow  shadow-xl" : "dark:text-background"}`}
           >
             Multi Player
           </TabsTrigger>

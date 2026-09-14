@@ -13,6 +13,7 @@ import {
   Space_Grotesk,
   Urbanist,
   Unbounded,
+  Google_Sans_Flex,
 } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
@@ -20,6 +21,11 @@ import { GameDataProvider } from "@/context/GameDataContext";
 
 const poppins = Unbounded({
   weight: ["400", "500", "600", "700"],
+  variable: "--font-unbounded-sans",
+});
+const google_sane = Google_Sans_Flex({
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-google-sans",
 });
 
 export const metadata: Metadata = {
@@ -46,13 +52,15 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className="bg-background  overflow-x-hidden text-foreground "
+      className="overflow-x-hidden dark  bg-background   text-foreground dark:text-background   dark:bg-foreground"
       lang="en"
     >
       <GameDataProvider>
-        <body className={`${poppins.className} antialiased h-dvh`}>
+        <body
+          className={`${poppins.className} ${google_sane.className} antialiased h-dvh `}
+        >
           <Navbar></Navbar>
-          <main className="">{children}</main>
+          <main className="font-unbounded-sans">{children}</main>
         </body>
       </GameDataProvider>
     </html>

@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/Drawer";
-
 import GameGridComponent from "@/components/GameGrid";
 import { Keyboard } from "@/components/Keyboard";
 import { playSound } from "@/lib/sounds";
@@ -32,11 +21,11 @@ import {
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import useGameData, { GameDataProvider } from "@/context/GameDataContext";
+import GlobalSettingsComponent from "@/components/GlobalSettingsComponent";
 
 export default function CasualGameMode() {
   let selectedTheme = "light";
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [settings, setSettings] = useState(false);
   const [wordLength, setWordLength] = useState(5);
   const [chances, setChances] = useState(6);
   const [life, setLife] = useState(0);
@@ -279,11 +268,9 @@ export default function CasualGameMode() {
     return finalArray;
   }, [attempts]);
 
-  const { getLocalGameStateData } = useGameData()!;
-
   return (
     <div
-      className="flex justify-center items-center flex-col  bg-background gap-6 --min-h-[calc(100vh)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative "
+      className="flex justify-center items-center flex-col  bg-background dark:bg-foreground gap-6 --min-h-[calc(100vh)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative "
       onClick={() => {
         if (keyboardRef.current) keyboardRef.current.focus();
       }}
@@ -296,69 +283,10 @@ export default function CasualGameMode() {
           className="bg-linear-to-r from-blue-600 to-sky-700 text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3"
         >
           <GamepadIcon></GamepadIcon>
-          {/* <img className="w-7" src="/customize.png" alt="" /> */}
+
           <div>Customize Game</div>
         </motion.button>
-
-        <Drawer>
-          <DrawerTrigger
-            render={
-              <motion.button
-                onClick={() => {
-                  setSettings(true);
-                }}
-                whileTap={{
-                  scale: 0.91,
-                }}
-                className="bg-linear-to-r from-zinc-700 to-black text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3"
-              >
-                <Settings></Settings>
-                <div>Settings</div>
-              </motion.button>
-            }
-          ></DrawerTrigger>
-          <DrawerContent className={"bg-white border-none rounded-xl"}>
-            <DrawerHeader>
-              <DrawerTitle className={"text-start "}>Settings</DrawerTitle>
-              <DrawerDescription className={"text-start text-black/70"}>
-                Change the overall website's settings.
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4 space-y-3">
-              <div>Appearance</div>
-              <div className="grid grid-cols-3 gap-3">
-                {["light", "dark", "system"].map((x) => {
-                  return (
-                    <motion.button
-                      whileTap={{
-                        scale: 0.95,
-                      }}
-                      onClick={() => {}}
-                      key={x}
-                      className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${getLocalGameStateData("selected_theme") !== x ? "border-foreground/20  text-foreground/70" : "bg-green/15 border-green text-green"}`}
-                    >
-                      {x === "light" ? (
-                        <Sun></Sun>
-                      ) : x === "dark" ? (
-                        <Moon></Moon>
-                      ) : (
-                        <Laptop></Laptop>
-                      )}
-
-                      <div className="uppercase text-xs ">{x}</div>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
-            <DrawerFooter>
-              <button className="bg-linear-to-r from-blue-600 to-sky-700 p-3 rounded-lg text-white">
-                Save
-              </button>
-              <DrawerClose render={<button />}>Cancel</DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+        <GlobalSettingsComponent></GlobalSettingsComponent>
       </div>
 
       <AnimatePresence>

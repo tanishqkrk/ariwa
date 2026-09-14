@@ -8,53 +8,70 @@ import {
   useEffect,
 } from "react";
 
+type localStorageKeyValues =
+  | "selected_theme"
+  | "volume"
+  | "confetti"
+  | "keyboard_animations";
+
+type GameSettingType = Record<localStorageKeyValues, string>;
+
 const GameDataContext = createContext<{
-  getLocalGameStateData: any;
-  setLocalGameStateData: any;
+  getLocalGameStateData(key: localStorageKeyValues): string | false;
+  setLocalGameStateData(key: localStorageKeyValues, value: string): boolean;
+  gameSettings: GameSettingType;
 } | null>(null);
 
+const default_values = {
+  selected_theme: "light",
+  volume: "100",
+  confetti: "true",
+  keyboard_animations: "true",
+};
+
 function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
-  const default_values = {
+  const [gameSettings, setGameSettings] = useState<GameSettingType>({
     selected_theme: "light",
     volume: "100",
     confetti: "true",
     keyboard_animations: "true",
-  };
+  });
 
-  type LocalStorageKeyValues =
-    | "selected_theme"
-    | "volume"
-    | "confetti"
-    | "keyboard_animations";
-
-  function getLocalGameStateData(key: LocalStorageKeyValues) {
-    let valueToReturn = localStorage.getItem("key");
+  function getLocalGameStateData(key: localStorageKeyValues) {
+    let valueToReturn = localStorage.getItem(key);
     if (valueToReturn) {
-      return "";
+      return valueToReturn;
     } else {
       return false;
     }
   }
-  function setLocalGameStateData(key: LocalStorageKeyValues, value: string) {
+  function setLocalGameStateData(key: localStorageKeyValues, value: string) {
+    setGameSettings((org) => ({
+      ...org,
+      [key]: value,
+    }));
+
+    localStorage.setItem(key, value);
     return true;
   }
 
   function setupInitalLocalGameState() {
     (
-      Array.from(Object.keys(default_values)) as LocalStorageKeyValues[]
+      Array.from(Object.keys(default_values)) as localStorageKeyValues[]
     ).forEach((x) => {
-      getLocalGameStateData(x);
+      if (!getLocalGameStateData(x)) {
+        setLocalGameStateData(x, default_values[x]);
+      }
     });
   }
 
   useEffect(() => {
     setupInitalLocalGameState();
-    // getGameSettingsDataFromLocalStorageOnPageLoad();
   }, []);
 
   return (
     <GameDataContext.Provider
-      value={{ getLocalGameStateData, setLocalGameStateData }}
+      value={{ getLocalGameStateData, setLocalGameStateData, gameSettings }}
     >
       {children}
     </GameDataContext.Provider>

@@ -4,7 +4,7 @@ import { User } from "lucide-react";
 
 export default function Navbar() {
   return (
-    <div className="flex justify-between items-center w-full p-3 text-sm  z-999999999 bg-background">
+    <div className="flex justify-between items-center w-full p-3 text-sm  z-999999999 bg-background   text-foreground dark:text-background   dark:bg-foreground font-unbounded-sans">
       <div id="logo" className="flex justify-start items-center gap-2">
         <img src="/logo.svg" className="w-8" alt="" />
         <div className="text-base font-semibold">WordRush</div>

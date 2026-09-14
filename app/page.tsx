@@ -18,6 +18,7 @@ import {
   Podium,
   Trophy,
   Plus,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -25,6 +26,7 @@ import {
   MultiPlayerGameModes,
   SinglePlayerGameModes,
 } from "@/lib/GameModesData";
+import GlobalSettingsComponent from "@/components/GlobalSettingsComponent";
 
 function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
   return (
@@ -63,7 +65,7 @@ function QuickPlayCard({ mode }: { mode: GameModeDisplay }) {
 
 export default function Page() {
   return (
-    <main className="space-y-8 flex-col flex justify-between -min-h-[calc(100dvh-8em)] py-3 --pt-20">
+    <main className="space-y-8 flex-col flex justify-between -min-h-[calc(100dvh-8em)] py-3 --pt-20 ">
       <div className="space-y-8 flex flex-col justify-between h-full ">
         <div className="title px-3">Quick Play</div>
         <div id="quickGames" className="relative">
@@ -82,8 +84,8 @@ export default function Page() {
               }),
             ]}
           >
-            <CarouselNext className="absolute  right-2  z-999999 scale-150 shadow-lg border-0 shadow-black"></CarouselNext>
-            <CarouselPrevious className="absolute  left-2  z-999999 scale-150 shadow-lg border-0 shadow-black"></CarouselPrevious>
+            <CarouselNext className="absolute  right-2  z-9 scale-150 shadow-lg border-0 shadow-black"></CarouselNext>
+            <CarouselPrevious className="absolute  left-2  z-9 scale-150 shadow-lg border-0 shadow-black"></CarouselPrevious>
             <CarouselContent className="min-h-96">
               {[
                 ...SinglePlayerGameModes.slice(0, 3),
@@ -104,35 +106,44 @@ export default function Page() {
         <div></div>
       </div>
       <div className="px-3 flex justify-center items-center">
-        <div className="rounded-full bg-foreground w-full p-2 px-3 text-sm flex gap-3 justify-between items-center ">
+        <div className="rounded-full bg-foreground   text-background dark:text-foreground   dark:bg-background w-full p-2 px-3 text-sm flex gap-3 justify-between items-center ">
           <div className=" flex justify-start items-center gap-2">
             <motion.button
               whileTap={{
                 scale: 0.91,
               }}
-              className="bg-linear-to-r from-background to-yellow-50 to- text-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
+              className="bg-background text-foreground dark:text-background dark:bg-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
             >
               <ShoppingCart></ShoppingCart>
-              {/* <img src="/shop.png" className="w-8" alt="" /> */}
             </motion.button>
             <motion.button
               whileTap={{
                 scale: 0.91,
               }}
-              className="bg-linear-to-r from-background to-yellow-50 text-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
+              className="bg-background text-foreground dark:text-background dark:bg-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
             >
               <Search></Search>
-              {/* <img src="/search2.png" className="w-8 " alt="" /> */}
             </motion.button>
-            <motion.button
+            {/* <motion.button
               whileTap={{
                 scale: 0.91,
               }}
               className="bg-linear-to-r from-background to-yellow-50 text-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
             >
               <Trophy></Trophy>
-              {/* <img src="/trophy2.png" className="w-8" alt="" /> */}
-            </motion.button>
+            </motion.button> */}
+            <GlobalSettingsComponent
+              trigger={
+                <motion.button
+                  whileTap={{
+                    scale: 0.91,
+                  }}
+                  className="bg-background text-foreground dark:text-background dark:bg-foreground  p-1 rounded-full flex justify-center items-center aspect-square w-12"
+                >
+                  <Settings></Settings>
+                </motion.button>
+              }
+            ></GlobalSettingsComponent>
           </div>
           <Link href="/all-modes">
             <motion.div

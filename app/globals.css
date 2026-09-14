@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@utility font-google-sans {
+  font-family: "Google Sans", sans-serif;
+}
+@utility font-unbounded-sans {
+  font-family: "Unbounded", sans-serif;
+}
+
 * {
   user-select: none;
   /* outline: 1px solid red; */
@@ -7,7 +14,6 @@
 /*  */
 @theme inline {
   --color-background: #fffdea;
-  /* --color-background: #f6f5ec; */
   --color-foreground: #201f1e;
   /*  */
   --color-white: #f5f3ef;
@@ -18,6 +24,13 @@
   --color-green: #0eaa64;
   --color-pink: #ffbef4;
   --color-red: #f67b7b;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-foreground: #fffdea;
+  --color-background: #201f1e;
 }
 
 /*  */
