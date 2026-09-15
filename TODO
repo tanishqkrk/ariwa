@@ -1,14 +1,19 @@
-Checklist: 
-    ✔ Game UI setup @done(26-02-22 02:20)
-    ✔ Word total view @done(26-02-22 02:20)
-    ✔ Changing word length in between a guess doesn't restore the current position in guess @bug @done(26-02-28 17:33)
-    ---
-    ☐ Revamp UI
-    ☐ Combat mode for singleplayers
-    ---
-    ☐ No auth endgame system
-    ☐ Scrap https://wordly.org/ and plan new UI and features
-    ☐ Mutliple word type fix
-    ✘ auto saving state @cancelled(26-02-22 02:20)
-    ☐ sound settings
-    ☐ Game settings
+TODO: 
+    
+    Global: 
+        ☐ Google auth setup
+        ☐ User DB setup
+        ☐ Notifications system
+
+    @today Casual Mode:
+        ☐ Game over screens
+        ☐ Game over mechanisms
+        ☐ Customize game tek
+    
+    Daily word:
+        ☐ Cron job for word generation
+        ☐ Game page
+        
+    Race against time: 
+    
+    

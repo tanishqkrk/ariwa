@@ -10,7 +10,7 @@ import {
 
 type localStorageKeyValues =
   | "selected_theme"
-  | "volume"
+  | "sound_effects"
   | "confetti"
   | "keyboard_animations";
 
@@ -24,7 +24,7 @@ const GameDataContext = createContext<{
 
 const default_values = {
   selected_theme: "light",
-  volume: "100",
+  sound_effects: "true",
   confetti: "true",
   keyboard_animations: "true",
 };
@@ -32,7 +32,7 @@ const default_values = {
 function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [gameSettings, setGameSettings] = useState<GameSettingType>({
     selected_theme: "light",
-    volume: "100",
+    sound_effects: "true",
     confetti: "true",
     keyboard_animations: "true",
   });

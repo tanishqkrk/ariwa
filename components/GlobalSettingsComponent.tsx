@@ -109,22 +109,31 @@ export default function GlobalSettingsComponent({
         <div className="p-4 space-y-3 ">
           <div>Game preferences</div>
           <div className="py-3 border-foreground/20 dark:border-background/20 border rounded-lg divide-y-2 divide-foreground/10 space-y-2">
-            <div className="min-w-full flex items-start justify-start gap-3 p-3 flex-col">
-              <div className="w-full flex items-center gap-3">
+            <Label
+              htmlFor="keyboard_animations"
+              className="min-w-full flex items-center justify-start gap-3 p-3"
+            >
+              <div className="w-fit ">
                 <Volume2></Volume2>
-                <div className="text-xs">Volume</div>
               </div>
-              <Slider
-                onValueChange={(e) => {
-                  console.log(e);
-                }}
-                defaultValue={[100]}
-                max={100}
-                step={1}
-                min={0}
-                className=" w-full  "
-              />
-            </div>
+              <div className="w-full">
+                <div className="text-xs">Play Sounds</div>
+                <div className="font-google-sans text-xs text-foreground/60 dark:text-background/60">
+                  Typing, guessed, wrong sounds etc
+                </div>
+              </div>
+              <div className="">
+                <Switch
+                  onCheckedChange={(e) => {
+                    setLocalGameStateData("sound_effects", e.toString());
+                    console.log(e);
+                  }}
+                  checked={gameSettings.sound_effects === "true" ? true : false}
+                  id="keyboard_animations"
+                  className={"scale-125"}
+                />
+              </div>
+            </Label>
             <Label
               htmlFor="keyboard_animations"
               className="min-w-full flex items-center justify-start gap-3 p-3"

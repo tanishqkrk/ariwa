@@ -18,6 +18,7 @@ import {
   Settings,
   Sun,
   Trophy,
+  X,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import useGameData, { GameDataProvider } from "@/context/GameDataContext";
@@ -29,7 +30,7 @@ export default function CasualGameMode() {
   let selectedTheme = "light";
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordLength, setWordLength] = useState(5);
-  const [chances, setChances] = useState(6);
+  const [chances, setChances] = useState(2);
   const [life, setLife] = useState(0);
   const [layout, setLayout] = useState(
     new Array(chances)
@@ -60,9 +61,7 @@ export default function CasualGameMode() {
 
   function addLetter(letter: string) {
     if (gameover) return;
-    // if (soundEffect)
-
-    playSound("add");
+    if (gameSettings.sound_effects === "true" ? true : false) playSound("add");
     if (currentIndex < wordLength) {
       let localIndex = currentIndex;
 
@@ -91,7 +90,8 @@ export default function CasualGameMode() {
 
     // if (soundEffect)
 
-    playSound("remove");
+    if (gameSettings.sound_effects === "true" ? true : false)
+      playSound("remove");
     if (currentIndex > 0) {
       let localIndex = currentIndex;
       setCurrentIndex((org) => org - 1);
@@ -118,7 +118,8 @@ export default function CasualGameMode() {
   function submitAttempt() {
     function shakeKeyboard() {
       // if (soundEffect)
-      playSound("error");
+      if (gameSettings.sound_effects === "true" ? true : false)
+        playSound("error");
       document
         .querySelector("#virtual-keyboard")
         ?.classList.add("error-shake-set");
@@ -238,7 +239,8 @@ export default function CasualGameMode() {
           });
         }
         setGameover(true);
-        playSound("hint");
+        if (gameSettings.sound_effects === "true" ? true : false)
+          playSound("hint");
         setWin(true);
       }, 400);
     }
@@ -289,23 +291,6 @@ export default function CasualGameMode() {
         </motion.button>
         <GlobalSettingsComponent></GlobalSettingsComponent>
       </div>
-
-      <AnimatePresence>
-        {gameover && (
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 0.6,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            className="bg-background  fixed top-0 left-0 h-screen w-screen duration-200 z-9999"
-          ></motion.div>
-        )}
-      </AnimatePresence>
 
       <GameGridComponent
         attempts={attempts}
@@ -375,6 +360,35 @@ export default function CasualGameMode() {
         name=""
         id=""
       />
+      <AnimatePresence>
+        {gameover && (
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="z-999999"
+          >
+            <motion.div className="bg-foreground/60 backdrop-blur-sm  fixed top-0 left-0 h-screen w-screen duration-200 z-9999 "></motion.div>
+            {win ? (
+              <div className="bg-white dark:bg-black fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-5/6 h-96 z-999999 rounded-lg flex flex-col justify-center items-center ">
+                {/* <button className="absolute top-6 right-6 bg-foreground/10 p-3 rounded-full">
+                  <X></X>
+                </button> */}
+                <div></div>
+                <img src="/newtrophy.png" className="w-64" alt="" />
+              </div>
+            ) : (
+              <></>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
