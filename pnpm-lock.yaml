@@ -38,6 +38,9 @@ importers:
       firebase-functions:
         specifier: ^7.3.2
         version: 7.3.2(firebase-admin@14.3.0(@firebase/app-compat@0.5.8)(@firebase/app@0.14.8))
+      freezeframe:
+        specifier: ^5.0.2
+        version: 5.0.2
       is-word:
         specifier: ^1.0.4
         version: 1.0.4
@@ -3483,6 +3486,9 @@ packages:
         optional: true
       react-dom:
         optional: true
+
+  freezeframe@5.0.2:
+    resolution: {integrity: sha512-Lp1ltC2vJGBqxdW5U4Hx+JMW+s9KfTPpxKhSTlpmQxYX5oK66y3GIZo56Jie4XtSOApSbfc8SBcsbZzeTNKfFg==}
 
   fresh@2.0.0:
     resolution: {integrity: sha512-Rx/WycZ60HOaqLKAi6cHRKKI7zxWbJ31MhntmtwMoaTeF7XFH9hhBp8vITaMidfljRQ6eYWCKkaTK+ykVJHP2A==}
@@ -9372,6 +9378,8 @@ snapshots:
     optionalDependencies:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
+
+  freezeframe@5.0.2: {}
 
   fresh@2.0.0: {}
 

@@ -19,15 +19,6 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
 import { GameDataProvider } from "@/context/GameDataContext";
 
-const poppins = Unbounded({
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-unbounded-sans",
-});
-const google_sane = Google_Sans_Flex({
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-google-sans",
-});
-
 export const metadata: Metadata = {
   title: "WordRush — Guess. Think. Win.",
   description:
@@ -44,7 +35,27 @@ export const metadata: Metadata = {
     description: "Find the word. Build your streak. Climb the ranks.",
   },
 };
+const poppins = Unbounded({
+  weight: ["400", "500", "600", "700", "200", "300", "800", "900"],
+  variable: "--font-unbounded-sans",
+});
 
+const google_sane = Google_Sans_Flex({
+  weight: [
+    "1",
+    "400",
+    "500",
+    "600",
+    "700",
+    "100",
+    "200",
+    "300",
+    "800",
+    "900",
+    "1000",
+  ],
+  variable: "--font-google-sans",
+});
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -57,10 +68,10 @@ export default function RootLayout({
     >
       <GameDataProvider>
         <body
-          className={`${poppins.className} ${google_sane.className} antialiased h-dvh `}
+          className={`${google_sane.variable} ${poppins.variable}   antialiased h-dvh `}
         >
           <Navbar></Navbar>
-          <main className="font-unbounded-sans">{children}</main>
+          <main className="font-unbounded">{children}</main>
         </body>
       </GameDataProvider>
     </html>

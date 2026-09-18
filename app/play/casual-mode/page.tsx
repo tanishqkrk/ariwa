@@ -8,30 +8,40 @@ import { generateRandomWord } from "@/utils/generateRandomWord";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
+  ChevronLeft,
   ChevronRight,
+  Clock,
   Crown,
   GamepadIcon,
   Laptop,
   Menu,
   Moon,
   PartyPopper,
+  RefreshCcw,
+  RefreshCw,
+  RotateCcw,
   Settings,
   Sun,
   Trophy,
   X,
+  Zap,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import useGameData, { GameDataProvider } from "@/context/GameDataContext";
 import GlobalSettingsComponent from "@/components/GlobalSettingsComponent";
+import Script from "next/script";
+import Link from "next/link";
+import { turnConfettiOff, turnConfettiOn } from "@/lib/toggleConfetti";
 
 export default function CasualGameMode() {
   const { gameSettings } = useGameData()!;
 
-  let selectedTheme = "light";
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordLength, setWordLength] = useState(5);
-  const [chances, setChances] = useState(2);
+  const [chances, setChances] = useState(6);
   const [life, setLife] = useState(0);
+
+  // Layout is the mathematical matrix to determine the UI
   const [layout, setLayout] = useState(
     new Array(chances)
       .fill("")
@@ -40,6 +50,7 @@ export default function CasualGameMode() {
 
   const [word, setWord] = useState("");
 
+  // The actual matrix that gets mapped
   let [attempts, setAttempts] =
     useState<{ letter: string; status: string }[][]>(layout);
 
@@ -148,20 +159,25 @@ export default function CasualGameMode() {
                 if (i === life) {
                   return x.map((y, i) => {
                     if (i === idx) {
+                      // If the letter does not exist at all
                       if (!wordArray.includes(attemptArray[idx])) {
                         return {
                           ...y,
                           status: "INCORRECT",
                         };
-                      } else if (
-                        wordArray.filter((x) => x === attemptArray[idx])
-                          .length < dict[attemptArray[idx]]
-                      ) {
-                        return {
-                          ...y,
-                          status: "INCORRECT",
-                        };
-                      } else if (wordArray[idx] === attemptArray[idx]) {
+                      }
+                      // TODO: Logic for repeated letters
+                      // else if (
+                      //   wordArray.filter((x) => x === attemptArray[idx])
+                      //     .length < dict[attemptArray[idx]]
+                      // ) {
+                      //   return {
+                      //     ...y,
+                      //     status: "INCORRECT",
+                      //   };
+                      // }
+                      //
+                      else if (wordArray[idx] === attemptArray[idx]) {
                         return {
                           ...y,
                           status: "CORRECT",
@@ -212,19 +228,25 @@ export default function CasualGameMode() {
     })();
   }, []);
 
+  // const gameEndConfetti = new Freezeframe("#gameEndConfetti", {
+  //   warnings: false,
+  //   trigger: false,
+  // });
   useEffect(() => {
-    let latestAttempt =
+    let isLatestAttemptCorrect =
       attempts
         .filter((x) => x[0].status)
         .reverse()[0]
         ?.filter((x) => x.status === "CORRECT").length === wordLength;
 
-    if (life === chances && !latestAttempt) {
+    console.log(isLatestAttemptCorrect);
+
+    if (life === chances && !isLatestAttemptCorrect) {
       setTimeout(() => {
         setGameover(true);
         setLose(true);
       }, 400);
-    } else if (latestAttempt) {
+    } else if (isLatestAttemptCorrect) {
       setTimeout(() => {
         if (gameSettings.confetti === "true" ? true : false) {
           confetti({
@@ -243,6 +265,9 @@ export default function CasualGameMode() {
           playSound("hint");
         setWin(true);
       }, 400);
+      setTimeout(() => {
+        turnConfettiOn();
+      }, 450);
     }
   }, [life]);
 
@@ -273,7 +298,7 @@ export default function CasualGameMode() {
 
   return (
     <div
-      className="flex justify-center items-center flex-col  bg-background dark:bg-foreground gap-6 --min-h-[calc(100vh)] overflow-x-hidden overflow-y-hidden py-6 pb-18 px-3 relative "
+      className="flex justify-center items-center flex-col  bg-background dark:bg-foreground gap-6 --min-h-[calc(100vh)] overflow-x-hidden overflow-y-hidden py-6 pb- px-3 relative "
       onClick={() => {
         if (keyboardRef.current) keyboardRef.current.focus();
       }}
@@ -374,17 +399,252 @@ export default function CasualGameMode() {
             }}
             className="z-999999"
           >
-            <motion.div className="bg-foreground/60 backdrop-blur-sm  fixed top-0 left-0 h-screen w-screen duration-200 z-9999 "></motion.div>
+            <motion.div className="bg-foreground/50 backdrop-blur-xs  fixed top-0 left-0 h-screen w-screen duration-200 z-9999"></motion.div>
             {win ? (
-              <div className="bg-white dark:bg-black fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-5/6 h-96 z-999999 rounded-lg flex flex-col justify-center items-center ">
-                {/* <button className="absolute top-6 right-6 bg-foreground/10 p-3 rounded-full">
-                  <X></X>
-                </button> */}
-                <div></div>
-                <img src="/newtrophy.png" className="w-64" alt="" />
+              <div
+                className="bg-white dark:bg-black fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[95%] h- z-999999 rounded-3xl flex flex-col justify-center items-center pb-12 space-y-8
+              "
+              >
+                <Script
+                  id="ungabunga"
+                  src="https://run.confettipage.com/here.js"
+                  data-confetticode="U2FsdGVkX18MKScTzJn6AdfsIpok9d+3SbPaSLoB8Q1V3O8Z8FwQt7RpZWApcP+xHFnRpoolQ+7v+SZwce1gtILaCPyHyIVbtzhU8GCtjS8RqRVd6H14N3lljdV2PSGLDroWuOFbUqlAApi7vNFWyicxQ0Dkl2DiKUe0wGKKa+H0jzrOjpzvU/a+9bfJCGX2ltl8uv2d8Wmh8jQuL0086Qqc268Fp/tutJ5UZJge5hztsvdeVkXS2NQ/sI5tYCq8BjeLk0DS3O/VAjWHw7UGDvdp6POxMmudwfIG+8gzgns1LId8ljYc9OvuWptfGV5v5gTxWi15poi16G/Aff2JS0icNQlkG1zs2vRKA+RB+RZynTsQJjHYW2/DUBE5qFaSQE88q4a/BHpifEFts2X0sRO+d7jQ4+x7h8Y+Q4D0pH9yCfr8Hcn4X4iZVVZdNpoZCF7PdZHzfMHSxMGu2xjg3uZ4vlfVqRDWzB+SQV408wZ4dZ+ysFbzNBlDh+HEQ13mpAWjrb8hE8E77gTXAwjEJNQG+fZRf3cszCoPRAYMsRQRWNFXF6DpbmlkQMxmoyPT63l+SZI931ZBF3JYhcmxyEXS/0c38RDuEwAgPZyE6dwcx1CI/4rkTtqJorcnKZQVidSET1pJK+6PXln/xMxJOxzDUZa7nbC8WaEus9ovzR+OII+e5YIQlvwyDWXTRFsiRYZQIEIEEcnmShqdLVGdHr81AQ3cTRBKQbJvtp/snZdadbwWohKPXX5u0SfgLdf9"
+                ></Script>
+                {/* <img
+                  src="/confetti2.gif"
+                  className="absolute top-0 left-0 h-full object-cover brightness-125  "
+                  alt=""
+                /> */}
+                <div className="space-y-1 flex flex-col justify-center items-center z-999">
+                  <img
+                    loading="eager"
+                    fetchPriority="high"
+                    src="/newtrophy.png"
+                    className="w-56"
+                    alt=""
+                  />
+
+                  <div className="text-3xl font-semibold ">
+                    You <span className="text-green">Win</span>
+                  </div>
+                  <div className="font-google-sans text-foreground/80 dark:text-background/80">
+                    Great job! You Guessed the word!
+                  </div>
+                  <div className="space-x-1 py-2 w-full flex justify-center items-center">
+                    {word.split("").map((x) => (
+                      <span
+                        key={x}
+                        className="bg-linear-to-r to-emerald-700 from-green-700 text-white h-full  w-full aspect-square rounded-lg flex justify-center items-center text-xl font-semibold"
+                      >
+                        {x}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-1 flex w-full justify-between items-center px-3 divide-x-2 divide-foreground/30">
+                  {[
+                    {
+                      type: "Tries used",
+                      value: life,
+                    },
+                    {
+                      type: "Time taken",
+                      value: "00:48",
+                    },
+                  ].map((x, i) => {
+                    return (
+                      <div
+                        key={x.type}
+                        className="flex flex-col justify-center items-center   w-full space-y-2"
+                      >
+                        <div className="w-full flex justify-center items-center mb-">
+                          {i === 0 ? (
+                            <Zap
+                              className="fill-green stroke-green "
+                              strokeWidth="0"
+                              size={30}
+                            ></Zap>
+                          ) : i === 1 ? (
+                            <Clock
+                              className="stroke-green"
+                              strokeWidth="2"
+                              size={30}
+                            ></Clock>
+                          ) : i === 2 ? (
+                            <Zap
+                              className="fill-green stroke-green "
+                              strokeWidth="0"
+                              size={30}
+                            ></Zap>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                        <div className=" w-full text-center  flex justify-center items-center font-google-sans mb-">
+                          {x.value}
+                        </div>
+                        <div className="w-full  text-center text-sm text-foreground/80 dark:text-background/80 font-google">
+                          {x.type}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="px-3 w-full flex flex-col justify-center items-center gap-3 font-google">
+                  <motion.button
+                    onClick={async () => {
+                      turnConfettiOff();
+                      const luckyLad = await generateRandomWord(wordLength);
+                      setWord(luckyLad.word.toUpperCase());
+                      setWin(false);
+                      setGameover(false);
+                      setAttempts(layout);
+                      setLife(0);
+                      setCurrentIndex(0);
+                    }}
+                    whileTap={{
+                      scale: 0.95,
+                    }}
+                    className="bg-linear-to-r to-emerald-500 from-green-600 w-full p-3 rounded-full text-background flex justify-center items-center gap-0  text-center py-5"
+                  >
+                    Next word
+                    <ChevronRight size={20}></ChevronRight>
+                  </motion.button>
+                  <Link href={"/all-modes"} className="w-full">
+                    <motion.button
+                      onClick={() => {
+                        turnConfettiOff();
+                      }}
+                      whileTap={{
+                        scale: 0.95,
+                      }}
+                      className="bg-foreground/5 dark:bg-background/5 w-full p-3 rounded-full text-foreground dark:text-background flex justify-center items-center gap-0  text-center py-5"
+                    >
+                      <ChevronLeft size={20}></ChevronLeft>
+                      Back to modes
+                    </motion.button>
+                  </Link>
+                </div>
               </div>
             ) : (
-              <></>
+              <div
+                className="bg-white dark:bg-black fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[95%] h- z-999999 rounded-3xl flex flex-col justify-center items-center pb-12 space-y-8
+              "
+              >
+                <div className="space-y-1 flex flex-col justify-center items-center z-999">
+                  <img
+                    style={{
+                      filter: "hue-rotate(20deg)",
+                    }}
+                    loading="eager"
+                    fetchPriority="high"
+                    src="/heartbreak.png"
+                    className="w-56"
+                    alt=""
+                  />
+
+                  <div className="text-xl font-semibold text-center ">
+                    Better Luck Next Time
+                  </div>
+                  <div className="font-google-sans text-foreground/80 dark:text-background/80">
+                    The word was
+                  </div>
+                  <div className="space-x-1 py-2 w-full flex justify-center items-center">
+                    {word.split("").map((x) => (
+                      <span
+                        key={x}
+                        className="bg-linear-to-b from-orange-500 to-red-500 text-white h-full  w-full aspect-square rounded-lg flex justify-center items-center text-xl font-semibold"
+                      >
+                        {x}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-1 flex w-full justify-between items-center px-3 divide-x-2 divide-foreground/30">
+                  {[
+                    {
+                      type: "Tries used",
+                      value: life,
+                    },
+                    {
+                      type: "Time taken",
+                      value: "00:48",
+                    },
+                  ].map((x, i) => {
+                    return (
+                      <div
+                        key={x.type}
+                        className="flex flex-col justify-center items-center   w-full space-y-2"
+                      >
+                        <div className="w-full flex justify-center items-center mb-">
+                          {i === 0 ? (
+                            <Zap
+                              className="fill-red stroke-red "
+                              strokeWidth="0"
+                              size={30}
+                            ></Zap>
+                          ) : i === 1 ? (
+                            <Clock
+                              className="stroke-red"
+                              strokeWidth="2"
+                              size={30}
+                            ></Clock>
+                          ) : i === 2 ? (
+                            <Zap
+                              className="fill-red stroke-red "
+                              strokeWidth="0"
+                              size={30}
+                            ></Zap>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                        <div className=" w-full text-center  flex justify-center items-center font-google-sans mb-">
+                          {x.value} {x.type === "Tries used" && "/ " + life}
+                        </div>
+                        <div className="w-full  text-center text-sm text-foreground/80 dark:text-background/80 font-google">
+                          {x.type}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="px-3 w-full flex flex-col justify-center items-center gap-3 font-google">
+                  <motion.button
+                    onClick={async () => {
+                      turnConfettiOff();
+                      const luckyLad = await generateRandomWord(wordLength);
+                      setWord(luckyLad.word.toUpperCase());
+                      setWin(false);
+                      setGameover(false);
+                      setAttempts(layout);
+                      setLife(0);
+                      setCurrentIndex(0);
+                    }}
+                    whileTap={{
+                      scale: 0.95,
+                    }}
+                    className="bg-linear-to-b from-orange-500 to-red-500 w-full p-3 rounded-full text-background flex justify-center items-center gap-2  text-center py-5"
+                  >
+                    Try again
+                    <RotateCcw size={20}></RotateCcw>
+                  </motion.button>
+                  <Link href={"/all-modes"} className="w-full">
+                    <motion.button
+                      onClick={() => {
+                        turnConfettiOff();
+                      }}
+                      whileTap={{
+                        scale: 0.95,
+                      }}
+                      className="bg-foreground/5 dark:bg-background/5 w-full p-3 rounded-full text-foreground dark:text-background flex justify-center items-center gap-0  text-center py-5"
+                    >
+                      <ChevronLeft size={20}></ChevronLeft>
+                      Back to modes
+                    </motion.button>
+                  </Link>
+                </div>
+              </div>
             )}
           </motion.div>
         )}

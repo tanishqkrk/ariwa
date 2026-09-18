@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
-@utility font-google-sans {
-  font-family: "Google Sans", sans-serif;
+/* @utility font-google-sans {
+  font-family: "Google Sans";
 }
 @utility font-unbounded-sans {
-  font-family: "Unbounded", sans-serif;
-}
+  } */
 
 * {
   user-select: none;
   /* outline: 1px solid red; */
 }
 /*  */
+
 @theme inline {
   --color-background: #fffdea;
   --color-foreground: #201f1e;
@@ -24,6 +24,8 @@
   --color-green: #0eaa64;
   --color-pink: #ffbef4;
   --color-red: #f67b7b;
+  --font-unbounded: var(--font-unbounded-sans);
+  --font-google: var(--font-google-sans);
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -173,3 +175,13 @@ button {
     0 0,
     10px 10px;
 }
+
+.cp-dwp--popup {
+  display: none !important;
+}
+
+a:has(strong) {
+  display: none !important;
+}
+
+/*  */

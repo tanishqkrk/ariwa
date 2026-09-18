@@ -204,7 +204,10 @@ export const Key = memo(function KeyComponent({
   return (
     <motion.div
       key={letter}
-      onClick={() => onClick()}
+      onClick={() => {
+        navigator.vibrate(50);
+        onClick();
+      }}
       whileTap={{
         scale: animation ? 0.85 : 1,
       }}

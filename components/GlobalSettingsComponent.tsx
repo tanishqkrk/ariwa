@@ -34,6 +34,7 @@ export default function GlobalSettingsComponent({
 }: {
   trigger?: ReactElement;
 }) {
+  const normalButtonVibrate = 30;
   const { setLocalGameStateData, gameSettings } = useGameData()!;
 
   return (
@@ -47,7 +48,7 @@ export default function GlobalSettingsComponent({
               whileTap={{
                 scale: 0.91,
               }}
-              className="bg-linear-to-r from-zinc-900 to-black dark:from-zinc-100 dark:to-white text-background dark:text-foreground rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3 font-unbounded-sans"
+              className="bg-linear-to-r from-zinc-900 to-black dark:from-zinc-100 dark:to-white text-background dark:text-foreground rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3 font-unbounded"
             >
               <Settings></Settings>
               <div>Settings</div>
@@ -57,7 +58,7 @@ export default function GlobalSettingsComponent({
       ></DrawerTrigger>
       <DrawerContent
         className={
-          "bg-white   text-foreground dark:text-background   dark:bg-black border-none rounded-xl font-unbounded-sans z-999999999999 "
+          "bg-white   text-foreground dark:text-background   dark:bg-black border-none rounded-xl font-unbounded z-999999999999 "
         }
       >
         <DrawerHeader>
@@ -65,7 +66,7 @@ export default function GlobalSettingsComponent({
             Settings
           </DrawerTitle>
           <DrawerDescription
-            className={"text-start text-black/70 dark:text-white"}
+            className={"text-start text-black/70 dark:text-white font-google"}
           >
             Change the overall website's settings.
           </DrawerDescription>
@@ -81,6 +82,8 @@ export default function GlobalSettingsComponent({
                     scale: 0.95,
                   }}
                   onClick={() => {
+                    navigator.vibrate(normalButtonVibrate);
+
                     if (x !== "custom")
                       setLocalGameStateData("selected_theme", x);
                     if (x === "dark") {
@@ -90,7 +93,7 @@ export default function GlobalSettingsComponent({
                     }
                   }}
                   key={x}
-                  className={`w-full  p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${gameSettings.selected_theme !== x ? "border-foreground/20 dark:border-background/20  bg-white   text-foreground dark:text-background   dark:bg-foreground" : "bg-green/15 border-green text-green"} disabled:opacity-45`}
+                  className={`w-full   p-4 rounded-lg flex flex-col justify-center items-center gap-2 border  ${gameSettings.selected_theme !== x ? "border-foreground/20 dark:border-background/20  bg-white   text-foreground dark:text-background   dark:bg-foreground" : "bg-green/15 border-green text-green"} disabled:opacity-45`}
                 >
                   {x === "light" ? (
                     <Sun></Sun>
@@ -118,13 +121,19 @@ export default function GlobalSettingsComponent({
               </div>
               <div className="w-full">
                 <div className="text-xs">Play Sounds</div>
-                <div className="font-google-sans text-xs text-foreground/60 dark:text-background/60">
+                <div
+                  style={{
+                    fontFamily: "Google Sans; sans-serif",
+                  }}
+                  className="font-google text-xs text-foreground/60 dark:text-background/60"
+                >
                   Typing, guessed, wrong sounds etc
                 </div>
               </div>
               <div className="">
                 <Switch
                   onCheckedChange={(e) => {
+                    navigator.vibrate(normalButtonVibrate);
                     setLocalGameStateData("sound_effects", e.toString());
                     console.log(e);
                   }}
@@ -143,13 +152,15 @@ export default function GlobalSettingsComponent({
               </div>
               <div className="w-full">
                 <div className="text-xs">Keyboard Animations</div>
-                <div className="font-google-sans text-xs text-foreground/60 dark:text-background/60">
+                <div className="font-google text-xs text-foreground/60 dark:text-background/60">
                   Visual feedback while you're typing
                 </div>
               </div>
               <div className="">
                 <Switch
                   onCheckedChange={(e) => {
+                    navigator.vibrate(normalButtonVibrate);
+
                     setLocalGameStateData("keyboard_animations", e.toString());
                     console.log(e);
                   }}
@@ -170,13 +181,15 @@ export default function GlobalSettingsComponent({
               </div>
               <div className="w-full">
                 <div className="text-xs">Confetti</div>
-                <div className="font-google-sans text-xs text-foreground/60 dark:text-background/60">
+                <div className="font-google text-xs text-foreground/60 dark:text-background/60">
                   Celebrate when you guess correctly
                 </div>
               </div>
               <div className="">
                 <Switch
                   onCheckedChange={(e) => {
+                    navigator.vibrate(normalButtonVibrate);
+
                     setLocalGameStateData("confetti", e.toString());
                     console.log(e);
                   }}
