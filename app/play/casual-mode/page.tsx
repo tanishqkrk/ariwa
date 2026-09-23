@@ -32,9 +32,19 @@ import GlobalSettingsComponent from "@/components/GlobalSettingsComponent";
 import Script from "next/script";
 import Link from "next/link";
 import { turnConfettiOff, turnConfettiOn } from "@/lib/toggleConfetti";
+import Image from "next/image";
+import useStopwatch from "@/lib/useStopwatch";
 
 export default function CasualGameMode() {
   const { gameSettings } = useGameData()!;
+  const {
+    formatSecondsToString,
+    convertEpochDifferenceIntoSeconds,
+    endTimeEpoch,
+    setEndTimeEpoch,
+    setStartTimeEpoch,
+    startTimeEpoch,
+  } = useStopwatch();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordLength, setWordLength] = useState(5);
@@ -224,6 +234,7 @@ export default function CasualGameMode() {
     (async function () {
       const luckyLad = await generateRandomWord(wordLength);
       setWord(luckyLad.word.toUpperCase());
+      setStartTimeEpoch(Date.now());
       // setHint(luckyLad.type);
     })();
   }, []);
@@ -246,7 +257,9 @@ export default function CasualGameMode() {
         setGameover(true);
         setLose(true);
       }, 400);
+      setEndTimeEpoch(Date.now());
     } else if (isLatestAttemptCorrect) {
+      setEndTimeEpoch(Date.now());
       setTimeout(() => {
         if (gameSettings.confetti === "true" ? true : false) {
           confetti({
@@ -295,6 +308,18 @@ export default function CasualGameMode() {
     });
     return finalArray;
   }, [attempts]);
+
+  async function resetWord() {
+    turnConfettiOff();
+    const luckyLad = await generateRandomWord(wordLength);
+    setWord(luckyLad.word.toUpperCase());
+    setWin(false);
+    setGameover(false);
+    setAttempts(layout);
+    setLife(0);
+    setCurrentIndex(0);
+    setStartTimeEpoch(Date.now());
+  }
 
   return (
     <div
@@ -416,7 +441,9 @@ export default function CasualGameMode() {
                   alt=""
                 /> */}
                 <div className="space-y-1 flex flex-col justify-center items-center z-999">
-                  <img
+                  <Image
+                    width={560}
+                    height={560}
                     loading="eager"
                     fetchPriority="high"
                     src="/newtrophy.png"
@@ -430,7 +457,7 @@ export default function CasualGameMode() {
                   <div className="font-google-sans text-foreground/80 dark:text-background/80">
                     Great job! You Guessed the word!
                   </div>
-                  <div className="space-x-1 py-2 w-full flex justify-center items-center">
+                  <div className="space-x-px py-2 w-full flex justify-center items-center">
                     {word.split("").map((x) => (
                       <span
                         key={x}
@@ -449,7 +476,12 @@ export default function CasualGameMode() {
                     },
                     {
                       type: "Time taken",
-                      value: "00:48",
+                      value: formatSecondsToString(
+                        convertEpochDifferenceIntoSeconds(
+                          endTimeEpoch,
+                          startTimeEpoch,
+                        ),
+                      ),
                     },
                   ].map((x, i) => {
                     return (
@@ -493,14 +525,7 @@ export default function CasualGameMode() {
                 <div className="px-3 w-full flex flex-col justify-center items-center gap-3 font-google">
                   <motion.button
                     onClick={async () => {
-                      turnConfettiOff();
-                      const luckyLad = await generateRandomWord(wordLength);
-                      setWord(luckyLad.word.toUpperCase());
-                      setWin(false);
-                      setGameover(false);
-                      setAttempts(layout);
-                      setLife(0);
-                      setCurrentIndex(0);
+                      await resetWord();
                     }}
                     whileTap={{
                       scale: 0.95,
@@ -532,10 +557,9 @@ export default function CasualGameMode() {
               "
               >
                 <div className="space-y-1 flex flex-col justify-center items-center z-999">
-                  <img
-                    style={{
-                      filter: "hue-rotate(20deg)",
-                    }}
+                  <Image
+                    width={560}
+                    height={560}
                     loading="eager"
                     fetchPriority="high"
                     src="/heartbreak.png"
@@ -549,7 +573,7 @@ export default function CasualGameMode() {
                   <div className="font-google-sans text-foreground/80 dark:text-background/80">
                     The word was
                   </div>
-                  <div className="space-x-1 py-2 w-full flex justify-center items-center">
+                  <div className="space-x-px py-2 w-full flex justify-center items-center">
                     {word.split("").map((x) => (
                       <span
                         key={x}
@@ -568,7 +592,12 @@ export default function CasualGameMode() {
                     },
                     {
                       type: "Time taken",
-                      value: "00:48",
+                      value: formatSecondsToString(
+                        convertEpochDifferenceIntoSeconds(
+                          endTimeEpoch,
+                          startTimeEpoch,
+                        ),
+                      ),
                     },
                   ].map((x, i) => {
                     return (
@@ -612,19 +641,12 @@ export default function CasualGameMode() {
                 <div className="px-3 w-full flex flex-col justify-center items-center gap-3 font-google">
                   <motion.button
                     onClick={async () => {
-                      turnConfettiOff();
-                      const luckyLad = await generateRandomWord(wordLength);
-                      setWord(luckyLad.word.toUpperCase());
-                      setWin(false);
-                      setGameover(false);
-                      setAttempts(layout);
-                      setLife(0);
-                      setCurrentIndex(0);
+                      await resetWord();
                     }}
                     whileTap={{
                       scale: 0.95,
                     }}
-                    className="bg-linear-to-b from-orange-500 to-red-500 w-full p-3 rounded-full text-background flex justify-center items-center gap-2  text-center py-5"
+                    className="bg-linear-to-b from-orange-600 to-red-600 w-full p-3 rounded-full text-background flex justify-center items-center gap-2  text-center py-5"
                   >
                     Try again
                     <RotateCcw size={20}></RotateCcw>
