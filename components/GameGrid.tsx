@@ -9,28 +9,20 @@ const GameGridComponent = memo(function GameGridComponent({
   currentIndex,
   letterSizeForMobile,
   wordLength,
+  borderRadiusForMobile,
 }: {
   attempts: { letter: string; status: string }[][];
   life: number;
   currentIndex: number;
   letterSizeForMobile: string[];
+  borderRadiusForMobile: string[];
   wordLength: number;
 }) {
   return (
-    <div className="gap-1 flex flex-col    justify-center items-center">
+    <div className="gap-1 flex flex-col  justify-center items-center">
       {attempts.map((atp, j) => {
         return (
           <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            transition={{
-              duration: 0.5,
-              delay: 0.1 * (j + 1),
-            }}
             key={j}
             className="flex items-center justify-center  gap-1 "
           >
@@ -44,9 +36,9 @@ const GameGridComponent = memo(function GameGridComponent({
                     scale: j !== life ? 1 : currentIndex === i ? 0.95 : 1,
                   }}
                   key={i}
-                  className={`h-16 ${
-                    letterSizeForMobile[wordLength]
-                  } aspect-square   text-center flex justify-center items-center text-xl max-md:text-xl font-bold rounded-xl  
+                  className={`h-16 ${letterSizeForMobile[wordLength]} 
+                  
+                  aspect-square   text-center flex justify-center items-center text-xl max-md:text-xl font-bold   ${borderRadiusForMobile[wordLength]}
                   border border-foreground/30 dark:border-background/50
                         ${
                           j === life
@@ -67,7 +59,7 @@ const GameGridComponent = memo(function GameGridComponent({
                               ? "bg-foreground/30 dark:bg-background/30"
                               : "bg-foreground/10 dark:bg-background/15"
                             : ""
-                        } duration-100 `}
+                        } -duration-100 `}
                 >
                   {word.letter}
                 </motion.div>

@@ -20,6 +20,7 @@ import {
   PartyPopper,
   Settings,
   Sun,
+  Vibrate,
   Volume,
   Volume1,
   Volume2,
@@ -82,7 +83,8 @@ export default function GlobalSettingsComponent({
                     scale: 0.95,
                   }}
                   onClick={() => {
-                    navigator.vibrate(normalButtonVibrate);
+                    if (gameSettings.haptics === "true" ? true : false)
+                      navigator.vibrate(normalButtonVibrate);
 
                     if (x !== "custom")
                       setLocalGameStateData("selected_theme", x);
@@ -133,7 +135,8 @@ export default function GlobalSettingsComponent({
               <div className="">
                 <Switch
                   onCheckedChange={(e) => {
-                    navigator.vibrate(normalButtonVibrate);
+                    if (gameSettings.haptics === "true" ? true : false)
+                      navigator.vibrate(normalButtonVibrate);
                     setLocalGameStateData("sound_effects", e.toString());
                     console.log(e);
                   }}
@@ -144,56 +147,28 @@ export default function GlobalSettingsComponent({
               </div>
             </Label>
             <Label
-              htmlFor="keyboard_animations"
+              htmlFor="haptics"
               className="min-w-full flex items-center justify-start gap-3 p-3"
             >
               <div className="w-fit ">
-                <Keyboard></Keyboard>
+                <Vibrate></Vibrate>
               </div>
               <div className="w-full">
-                <div className="text-xs">Keyboard Animations</div>
+                <div className="text-xs">Haptics</div>
                 <div className="font-google text-xs text-foreground/60 dark:text-background/60">
-                  Visual feedback while you're typing
+                  Haptic feedback when interacting with{" "}
                 </div>
               </div>
               <div className="">
                 <Switch
                   onCheckedChange={(e) => {
-                    navigator.vibrate(normalButtonVibrate);
+                    if (gameSettings.haptics === "true" ? true : false)
+                      navigator.vibrate(normalButtonVibrate);
 
-                    setLocalGameStateData("keyboard_animations", e.toString());
+                    setLocalGameStateData("haptics", e.toString());
                     console.log(e);
                   }}
-                  checked={
-                    gameSettings.keyboard_animations === "true" ? true : false
-                  }
-                  id="keyboard_animations"
-                  className={"scale-125"}
-                />
-              </div>
-            </Label>
-            <Label
-              htmlFor="confetti"
-              className="min-w-full flex items-center justify-start gap-3 p-3"
-            >
-              <div className="w-fit ">
-                <PartyPopper></PartyPopper>
-              </div>
-              <div className="w-full">
-                <div className="text-xs">Confetti</div>
-                <div className="font-google text-xs text-foreground/60 dark:text-background/60">
-                  Celebrate when you guess correctly
-                </div>
-              </div>
-              <div className="">
-                <Switch
-                  onCheckedChange={(e) => {
-                    navigator.vibrate(normalButtonVibrate);
-
-                    setLocalGameStateData("confetti", e.toString());
-                    console.log(e);
-                  }}
-                  checked={gameSettings.confetti === "true" ? true : false}
+                  checked={gameSettings.haptics === "true" ? true : false}
                   id="confetti"
                   className={"scale-125"}
                 />

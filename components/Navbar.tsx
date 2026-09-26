@@ -12,7 +12,7 @@ export default function Navbar() {
         </div>
       </div>
       <div id="userinfo">
-        <div className="bg-white  flex items-center justify-center gap-3  w-fit px-5 py-3 cursor-pointer  rounded-full hover:bg-foreground hover:text-background duration-150 text-xs dark:bg-black dark:text-white">
+        <div className="bg-white  flex items-center justify-center gap-3  w-fit px-5 py-3 cursor-pointer  rounded-full hover:bg-foreground hover:text-background  text-xs dark:bg-black dark:text-white">
           Login with <img src="/google.png" className="w-6" alt="" />
         </div>
       </div>

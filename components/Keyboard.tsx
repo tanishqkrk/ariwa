@@ -26,21 +26,9 @@ export const Keyboard = memo(function KeyboardComponent({
   return (
     <div
       id="virtual-keyboard"
-      className=" min-h-36 min-w-lg max-md:min-w-fit flex-col space-y-1 max-md:space-y-0.5 max-md:w-screen max-md:px-1 "
+      className=" min-h-36 min-w-lg max-md:min-w-fit flex-col space-y-1 max-md:space-y-1 max-md:w-screen max-md:px-1 "
     >
-      <motion.div
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.5,
-          delay: 0.6,
-        }}
-        className="flex gap-1 max-md:gap-0.5 justify-center items-center max-md:justify-center"
-      >
+      <motion.div className="flex gap-1 max-md:gap-1 justify-center items-center max-md:justify-center">
         {qwertyLettersRow1.map((letter) => {
           let status = letterStatus
             .filter((x) => x.letter === letter.toUpperCase())
@@ -66,24 +54,13 @@ export const Keyboard = memo(function KeyboardComponent({
               status={statusToPass}
               onClick={() => {
                 addLetter(letter.toUpperCase());
+                if (gameSettings.haptics === "true") navigator.vibrate(50);
               }}
             />
           );
         })}
       </motion.div>
-      <motion.div
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.5,
-          delay: 0.7,
-        }}
-        className="flex gap-1 max-md:gap-0.5 justify-center items-center max-md:justify-center"
-      >
+      <motion.div className="flex gap-1 max-md:gap-1 justify-center items-center max-md:justify-center">
         {qwertyLettersRow2.map((letter) => {
           let status = letterStatus
             .filter((x) => x.letter === letter.toUpperCase())
@@ -108,24 +85,13 @@ export const Keyboard = memo(function KeyboardComponent({
               status={statusToPass}
               onClick={() => {
                 addLetter(letter.toUpperCase());
+                if (gameSettings.haptics === "true") navigator.vibrate(50);
               }}
             />
           );
         })}
       </motion.div>
-      <motion.div
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.5,
-          delay: 0.9,
-        }}
-        className="flex gap-1 max-md:gap-0.5 justify-center items-center max-md:justify-center"
-      >
+      <motion.div className="flex gap-1 max-md:gap-1 justify-center items-center max-md:justify-center">
         <Key
           animation={gameSettings.keyboard_animations === "true" ? true : false}
           addLetter={addLetter}
@@ -135,6 +101,7 @@ export const Keyboard = memo(function KeyboardComponent({
           submitAttempt={submitAttempt}
           onClick={() => {
             submitAttempt();
+            if (gameSettings.haptics === "true") navigator.vibrate(50);
           }}
         />
         {qwertyLettersRow3.map((letter) => {
@@ -161,6 +128,7 @@ export const Keyboard = memo(function KeyboardComponent({
               status={statusToPass}
               onClick={() => {
                 addLetter(letter.toUpperCase());
+                if (gameSettings.haptics === "true") navigator.vibrate(50);
               }}
             />
           );
@@ -174,6 +142,7 @@ export const Keyboard = memo(function KeyboardComponent({
           lastPressedKey={lastPressedKey}
           onClick={() => {
             removeLetter();
+            if (gameSettings.haptics === "true") navigator.vibrate(50);
           }}
         />
       </motion.div>
@@ -205,23 +174,9 @@ export const Key = memo(function KeyComponent({
     <motion.div
       key={letter}
       onClick={() => {
-        navigator.vibrate(50);
         onClick();
       }}
-      whileTap={{
-        scale: animation ? 0.85 : 1,
-      }}
-      animate={{
-        scale: animation
-          ? lastPressedKey?.toLowerCase() === letter.toLowerCase()
-            ? 0.89
-            : 1
-          : 1,
-      }}
-      transition={{
-        duration: 0.05,
-      }}
-      className={` p-3 py-3 border border-foreground/30 dark:border-background/20  max-md:text-xs text-sm  min-w-12 max-md:min-w-6 max-md:w-full  max-md:h-16  ${(letter === "Enter" || letter === "Backspace") && "max-md:min-w-13 max-md:text-[.6em]"}  max-md:px-0 w-fit   flex justify-center items-center  rounded-xl max-md:rounded-lg uppercase font-semibold cursor-pointer select-none    ${letter === "Enter-" && "bg-linear-to-r to-emerald-500 from-green-600 text-white"}
+      className={` active:bg-foreground/20 dark:active:bg-background/50  border border-foreground/30 dark:border-background/20  max-md:text-lg text-sm  min-w-12 max-md:min-w-6 max-md:w-full  max-md:h-16  ${(letter === "Enter" || letter === "Backspace") && "max-md:min-w-13 max-md:text-[.6em]"}  max-md:px-0 w-fit   flex justify-center items-center  rounded-sm max-md:rounded-md uppercase font-semibold cursor-pointer select-none    ${letter === "Enter-" && "bg-linear-to-r to-emerald-500 from-green-600 text-white"}
 ${
   lastPressedKey?.toLowerCase() === letter.toLowerCase()
     ? "md:border-foreground/60 bg-foreground/20"

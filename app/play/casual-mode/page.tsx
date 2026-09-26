@@ -1,6 +1,16 @@
 "use client";
 
 import GameGridComponent from "@/components/GameGrid";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/Drawer";
 import { Keyboard } from "@/components/Keyboard";
 import { playSound } from "@/lib/sounds";
 import wordExists from "@/utils/checkWord";
@@ -8,10 +18,15 @@ import { generateRandomWord } from "@/utils/generateRandomWord";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
+  ALargeSmall,
+  CaseLower,
   ChevronLeft,
   ChevronRight,
   Clock,
   GamepadIcon,
+  Heart,
+  LetterText,
+  Play,
   RotateCcw,
   Zap,
 } from "lucide-react";
@@ -25,7 +40,10 @@ import Image from "next/image";
 import useStopwatch from "@/lib/useStopwatch";
 
 export default function CasualGameMode() {
-  const { gameSettings } = useGameData()!;
+  const {
+    gameSettings,
+    casualGameModeSettings: { chances, wordLength },
+  } = useGameData()!;
   const {
     formatSecondsToString,
     convertEpochDifferenceIntoSeconds,
@@ -36,10 +54,10 @@ export default function CasualGameMode() {
   } = useStopwatch();
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [wordLength, setWordLength] = useState(5);
-  const [chances, setChances] = useState(6);
-  const [life, setLife] = useState(0);
+  const [localWordLength, setLocalWordLength] = useState(wordLength);
+  const [localChances, setLocalChances] = useState(chances);
 
+  const [life, setLife] = useState(0);
   // Layout is the mathematical matrix to determine the UI
   const [layout, setLayout] = useState(
     new Array(chances)
@@ -67,16 +85,26 @@ export default function CasualGameMode() {
     "max-md:h-12",
     "max-md:h-10",
     "max-md:h-9",
+    "max-md:h-8",
   ];
+  const borderRadiusForMobile = [
+    "",
+    "rounded-xl",
+    "rounded-xl",
+    "rounded-xl",
+    "rounded-xl",
+    "rounded-xl",
+    "rounded-xl",
+    "rounded-lg",
+    "rounded-md",
+    "rounded-sm",
+    "rounded-xs",
+  ];
+  console.log(word);
 
   function addLetter(letter: string) {
-    if (gameover) return;
-    if (gameSettings.sound_effects === "true" ? true : false) playSound("add");
     if (currentIndex < wordLength) {
-      let localIndex = currentIndex;
-
       setCurrentIndex((org) => org + 1);
-      localIndex = localIndex + 1;
       setAttempts((org) =>
         org.map((x, i) => {
           if (i === life) {
@@ -93,24 +121,18 @@ export default function CasualGameMode() {
         }),
       );
     }
+    if (gameSettings.sound_effects === "true" ? true : false) playSound("add");
   }
 
   function removeLetter() {
     if (gameover) return;
-
-    // if (soundEffect)
-
-    if (gameSettings.sound_effects === "true" ? true : false)
-      playSound("remove");
     if (currentIndex > 0) {
-      let localIndex = currentIndex;
       setCurrentIndex((org) => org - 1);
-      localIndex = localIndex - 1;
       setAttempts((org) =>
         org.map((x, i) => {
           if (i === life) {
             return x.map((y, i) => {
-              if (i === localIndex) {
+              if (i === currentIndex - 1) {
                 return { letter: "", status: "" };
               } else {
                 return y;
@@ -122,6 +144,8 @@ export default function CasualGameMode() {
         }),
       );
     }
+    if (gameSettings.sound_effects === "true" ? true : false)
+      playSound("remove");
   }
   const [lastPressedKey, setLastPressedKey] = useState<string | null>(null);
 
@@ -250,19 +274,22 @@ export default function CasualGameMode() {
     } else if (isLatestAttemptCorrect) {
       setEndTimeEpoch(Date.now());
       setTimeout(() => {
-        if (gameSettings.confetti === "true" ? true : false) {
-          confetti({
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 },
-          });
-          confetti({
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 },
-          });
-        }
+        confetti({
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+        });
+        confetti({
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+        });
+
         setGameover(true);
+        if (gameSettings.haptics)
+          navigator.vibrate([
+            50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100,
+          ]);
         if (gameSettings.sound_effects === "true" ? true : false)
           playSound("hint");
         setWin(true);
@@ -318,16 +345,134 @@ export default function CasualGameMode() {
       }}
     >
       <div className="options flex justify-end items-center w-full gap-2">
-        <motion.button
-          whileTap={{
-            scale: 0.91,
-          }}
-          className="bg-linear-to-r from-blue-600 to-sky-700 text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3"
-        >
-          <GamepadIcon></GamepadIcon>
+        <Drawer>
+          <DrawerTrigger
+            render={
+              <motion.button
+                whileTap={{
+                  scale: 0.91,
+                }}
+                className="bg-linear-to-r from-blue-600 to-sky-700 text-background rounded-full p-2 flex text-xs items-center gap-2 shadow-lg shadow-black/10 px-3"
+              >
+                <GamepadIcon></GamepadIcon>
 
-          <div>Customize Game</div>
-        </motion.button>
+                <div>Customize Game</div>
+              </motion.button>
+            }
+          ></DrawerTrigger>
+          <DrawerContent
+            className={
+              "bg-white   text-foreground dark:text-background   dark:bg-black border-none rounded-xl font-unbounded z-999999999999 "
+            }
+          >
+            <DrawerHeader>
+              <DrawerTitle className={"text-start dark:text-white"}>
+                Customize Gameplay
+              </DrawerTitle>
+              <DrawerDescription
+                className={
+                  "text-start text-black/70 dark:text-white font-google"
+                }
+              >
+                Make the game easier or harder however you like.
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="p-4 space-y-9">
+              <div className="flex flex-col">
+                <div className="min-w-full flex items-center justify-start gap-3 p-3 px-1">
+                  <div className="w-fit ">
+                    <Heart
+                      size={36}
+                      className="stroke-red fill-red"
+                      strokeWidth={0}
+                    ></Heart>
+                  </div>
+                  <div className="w-full">
+                    <div className="text-xs">Number of lives</div>
+                    <div
+                      style={{
+                        fontFamily: "Google Sans; sans-serif",
+                      }}
+                      className="font-google text-xs text-foreground/60 dark:text-background/60"
+                    >
+                      Change how many attempts you get
+                    </div>
+                  </div>
+                </div>
+                <div className="min-w-full  items-center justify-start gap-1 p-0 grid grid-cols-5">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((x) => {
+                    return (
+                      <motion.button
+                        whileTap={{
+                          scale: 0.95,
+                        }}
+                        onClick={() => {
+                          if (gameSettings.haptics === "true")
+                            navigator.vibrate(30);
+                        }}
+                        className={`text-sm border-2  bg-foreground/10 dark:bg-background/10 py-4 text-center  rounded-sm font-google font-semibold ${chances === x ? "bg-green dark:bg-green  border-green/50 text-white" : "border-transparent"}`}
+                        key={x.toString()}
+                      >
+                        {x}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <div className="min-w-full flex items-center justify-start gap-3 p-3 px-1">
+                  <div className="w-fit ">
+                    <ALargeSmall
+                      size={36}
+                      className="stroke-blue "
+                      strokeWidth={2}
+                    ></ALargeSmall>
+                  </div>
+                  <div className="w-full">
+                    <div className="text-xs">Word Length</div>
+                    <div
+                      style={{
+                        fontFamily: "Google Sans; sans-serif",
+                      }}
+                      className="font-google text-xs text-foreground/60 dark:text-background/60"
+                    >
+                      Change how long the word is
+                    </div>
+                  </div>
+                </div>
+                <div className="min-w-full  items-center justify-start gap-1 p-0 grid grid-cols-4">
+                  {[3, 4, 5, 6, 7, 8, 9, 10].map((x) => {
+                    return (
+                      <motion.button
+                        whileTap={{
+                          scale: 0.95,
+                        }}
+                        onClick={() => {
+                          if (gameSettings.haptics === "true")
+                            navigator.vibrate(30);
+                        }}
+                        className={`text-sm border-2  bg-foreground/10 dark:bg-background/10 py-4 text-center  rounded-sm font-google font-semibold ${chances === x ? "bg-green dark:bg-green  border-green/50 text-white" : "border-transparent"}`}
+                        key={x.toString()}
+                      >
+                        {x}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
+              <motion.button
+                onClick={async () => {}}
+                whileTap={{
+                  scale: 0.95,
+                }}
+                className="bg-linear-to-r to-emerald-500 from-green-600 w-full p-3 rounded-full text-background flex justify-center items-center 0  text-center py-4 gap-2"
+              >
+                <Play fill="white" size={20}></Play>
+                Save changes
+              </motion.button>
+            </div>
+          </DrawerContent>
+        </Drawer>
         <GlobalSettingsComponent></GlobalSettingsComponent>
       </div>
 
@@ -335,6 +480,7 @@ export default function CasualGameMode() {
         attempts={attempts}
         currentIndex={currentIndex}
         letterSizeForMobile={letterSizeForMobile}
+        borderRadiusForMobile={borderRadiusForMobile}
         life={life}
         wordLength={wordLength}
       ></GameGridComponent>
@@ -436,7 +582,7 @@ export default function CasualGameMode() {
                     loading="eager"
                     fetchPriority="high"
                     src="/newtrophy.png"
-                    className="w-56"
+                    className="w-36"
                     alt=""
                   />
 
@@ -519,7 +665,7 @@ export default function CasualGameMode() {
                     whileTap={{
                       scale: 0.95,
                     }}
-                    className="bg-linear-to-r to-emerald-500 from-green-600 w-full p-3 rounded-full text-background flex justify-center items-center gap-0  text-center py-5"
+                    className="bg-linear-to-r to-emerald-500 from-green-600 w-full p-3 rounded-full text-background flex justify-center items-center gap-0  text-center py-3"
                   >
                     Next word
                     <ChevronRight size={20}></ChevronRight>
@@ -532,7 +678,7 @@ export default function CasualGameMode() {
                       whileTap={{
                         scale: 0.95,
                       }}
-                      className="bg-foreground/5 dark:bg-background/5 w-full p-3 rounded-full text-foreground dark:text-background flex justify-center items-center gap-0  text-center py-5"
+                      className="bg-foreground/5 dark:bg-background/5 w-full p-3 rounded-full text-foreground dark:text-background flex justify-center items-center gap-0  text-center py-3"
                     >
                       <ChevronLeft size={20}></ChevronLeft>
                       Back to modes
@@ -552,7 +698,7 @@ export default function CasualGameMode() {
                     loading="eager"
                     fetchPriority="high"
                     src="/heartbreak.png"
-                    className="w-56"
+                    className="w-36"
                     alt=""
                   />
 
@@ -635,7 +781,7 @@ export default function CasualGameMode() {
                     whileTap={{
                       scale: 0.95,
                     }}
-                    className="bg-linear-to-b from-orange-600 to-red-600 w-full p-3 rounded-full text-background flex justify-center items-center gap-2  text-center py-5"
+                    className="bg-linear-to-b from-orange-600 to-red-600 w-full p-3 rounded-full text-background flex justify-center items-center gap-2  text-center py-3"
                   >
                     Try again
                     <RotateCcw size={20}></RotateCcw>
@@ -648,7 +794,7 @@ export default function CasualGameMode() {
                       whileTap={{
                         scale: 0.95,
                       }}
-                      className="bg-foreground/5 dark:bg-background/5 w-full p-3 rounded-full text-foreground dark:text-background flex justify-center items-center gap-0  text-center py-5"
+                      className="bg-foreground/5 dark:bg-background/5 w-full p-3 rounded-full text-foreground dark:text-background flex justify-center items-center gap-0  text-center py-3"
                     >
                       <ChevronLeft size={20}></ChevronLeft>
                       Back to modes

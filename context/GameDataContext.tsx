@@ -11,21 +11,32 @@ import {
 type localStorageKeyValues =
   | "selected_theme"
   | "sound_effects"
-  | "confetti"
+  | "haptics"
   | "keyboard_animations";
 
 type GameSettingType = Record<localStorageKeyValues, string>;
 
+type CasualGameModeSettingsType = {
+  wordLength: number;
+  chances: number;
+};
+
 const GameDataContext = createContext<{
   getLocalGameStateData(key: localStorageKeyValues): string | false;
   setLocalGameStateData(key: localStorageKeyValues, value: string): boolean;
+
   gameSettings: GameSettingType;
+
+  casualGameModeSettings: CasualGameModeSettingsType;
+  setCasualGameModeSettings: React.Dispatch<
+    React.SetStateAction<CasualGameModeSettingsType>
+  >;
 } | null>(null);
 
 const default_values = {
   selected_theme: "light",
   sound_effects: "true",
-  confetti: "true",
+  haptics: "true",
   keyboard_animations: "true",
 };
 
@@ -33,9 +44,15 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [gameSettings, setGameSettings] = useState<GameSettingType>({
     selected_theme: "light",
     sound_effects: "true",
-    confetti: "true",
+    haptics: "true",
     keyboard_animations: "true",
   });
+
+  const [casualGameModeSettings, setCasualGameModeSettings] =
+    useState<CasualGameModeSettingsType>({
+      wordLength: 5,
+      chances: 6,
+    });
 
   function getLocalGameStateData(key: localStorageKeyValues) {
     let valueToReturn = localStorage.getItem(key);
@@ -85,7 +102,13 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
 
   return (
     <GameDataContext.Provider
-      value={{ getLocalGameStateData, setLocalGameStateData, gameSettings }}
+      value={{
+        getLocalGameStateData,
+        setLocalGameStateData,
+        gameSettings,
+        casualGameModeSettings,
+        setCasualGameModeSettings,
+      }}
     >
       {children}
     </GameDataContext.Provider>
