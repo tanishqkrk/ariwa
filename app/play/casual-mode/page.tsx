@@ -42,7 +42,8 @@ import useStopwatch from "@/lib/useStopwatch";
 export default function CasualGameMode() {
   const {
     gameSettings,
-    casualGameModeSettings: { chances, wordLength },
+    casualGameModeSettings: { chances, word_length },
+    setCasualGameModeSettingsInContext,
   } = useGameData()!;
   const {
     formatSecondsToString,
@@ -54,7 +55,7 @@ export default function CasualGameMode() {
   } = useStopwatch();
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [localWordLength, setLocalWordLength] = useState(wordLength);
+  const [localWordLength, setLocalWordLength] = useState(word_length);
   const [localChances, setLocalChances] = useState(chances);
 
   const [life, setLife] = useState(0);
@@ -62,7 +63,7 @@ export default function CasualGameMode() {
   const [layout, setLayout] = useState(
     new Array(chances)
       .fill("")
-      .map((x) => [...new Array(wordLength).fill({ letter: "", status: "" })]),
+      .map((x) => [...new Array(word_length).fill({ letter: "", status: "" })]),
   );
 
   const [word, setWord] = useState("");
@@ -103,7 +104,7 @@ export default function CasualGameMode() {
   console.log(word);
 
   function addLetter(letter: string) {
-    if (currentIndex < wordLength) {
+    if (currentIndex < word_length) {
       setCurrentIndex((org) => org + 1);
       setAttempts((org) =>
         org.map((x, i) => {
@@ -176,7 +177,7 @@ export default function CasualGameMode() {
           const attemptArray = attempts[life].map((x) => x.letter);
 
           const dict: any = {};
-          for (let idx = 0; idx < wordLength; idx++) {
+          for (let idx = 0; idx < word_length; idx++) {
             setAttempts((org) => {
               const newAttempt = org.map((x, i) => {
                 if (i === life) {
@@ -245,7 +246,7 @@ export default function CasualGameMode() {
 
   useEffect(() => {
     (async function () {
-      const luckyLad = await generateRandomWord(wordLength);
+      const luckyLad = await generateRandomWord(word_length);
       setWord(luckyLad.word.toUpperCase());
       setStartTimeEpoch(Date.now());
       // setHint(luckyLad.type);
@@ -261,7 +262,7 @@ export default function CasualGameMode() {
       attempts
         .filter((x) => x[0].status)
         .reverse()[0]
-        ?.filter((x) => x.status === "CORRECT").length === wordLength;
+        ?.filter((x) => x.status === "CORRECT").length === word_length;
 
     console.log(isLatestAttemptCorrect);
 
@@ -301,7 +302,7 @@ export default function CasualGameMode() {
   }, [life]);
 
   const currentStatus = useMemo(() => {
-    const huh = new Array(wordLength).fill("").map((_, i) => {
+    const huh = new Array(word_length).fill("").map((_, i) => {
       return attempts
         .filter((y, i) => i < life)
         .map((huh) => {
@@ -313,7 +314,7 @@ export default function CasualGameMode() {
         });
     });
 
-    let finalArray: string[] = new Array(wordLength).fill("");
+    let finalArray: string[] = new Array(word_length).fill("");
 
     finalArray = huh.map((x) => {
       if (x.filter((y) => y !== "_").length > 0) {
@@ -327,7 +328,7 @@ export default function CasualGameMode() {
 
   async function resetWord() {
     turnConfettiOff();
-    const luckyLad = await generateRandomWord(wordLength);
+    const luckyLad = await generateRandomWord(word_length);
     setWord(luckyLad.word.toUpperCase());
     setWin(false);
     setGameover(false);
@@ -409,8 +410,10 @@ export default function CasualGameMode() {
                         onClick={() => {
                           if (gameSettings.haptics === "true")
                             navigator.vibrate(30);
+
+                          setLocalChances(() => x);
                         }}
-                        className={`text-sm border-2  bg-foreground/10 dark:bg-background/10 py-4 text-center  rounded-sm font-google font-semibold ${chances === x ? "bg-green dark:bg-green  border-green/50 text-white" : "border-transparent"}`}
+                        className={`text-sm border-2  bg-foreground/10 dark:bg-background/10 py-4 text-center  rounded-sm font-google font-semibold ${localChances === x ? "bg-green dark:bg-green  border-green/50 text-white" : "border-transparent"}`}
                         key={x.toString()}
                       >
                         {x}
@@ -450,8 +453,10 @@ export default function CasualGameMode() {
                         onClick={() => {
                           if (gameSettings.haptics === "true")
                             navigator.vibrate(30);
+
+                          setLocalWordLength(() => x);
                         }}
-                        className={`text-sm border-2  bg-foreground/10 dark:bg-background/10 py-4 text-center  rounded-sm font-google font-semibold ${chances === x ? "bg-green dark:bg-green  border-green/50 text-white" : "border-transparent"}`}
+                        className={`text-sm border-2  bg-foreground/10 dark:bg-background/10 py-4 text-center  rounded-sm font-google font-semibold ${localWordLength === x ? "bg-green dark:bg-green  border-green/50 text-white" : "border-transparent"}`}
                         key={x.toString()}
                       >
                         {x}
@@ -461,7 +466,12 @@ export default function CasualGameMode() {
                 </div>
               </div>
               <motion.button
-                onClick={async () => {}}
+                onClick={async () => {
+                  setCasualGameModeSettingsInContext(
+                    ["word_length", "chances"],
+                    [localWordLength, localChances],
+                  );
+                }}
                 whileTap={{
                   scale: 0.95,
                 }}
@@ -482,7 +492,7 @@ export default function CasualGameMode() {
         letterSizeForMobile={letterSizeForMobile}
         borderRadiusForMobile={borderRadiusForMobile}
         life={life}
-        wordLength={wordLength}
+        wordLength={word_length}
       ></GameGridComponent>
       {!gameover ? (
         <div className="flex text-correct  min-h-10 gap-2 text-xl">

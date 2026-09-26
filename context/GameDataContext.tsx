@@ -8,18 +8,22 @@ import {
   useEffect,
 } from "react";
 
+// -------------------------------
+
 type localStorageKeyValues =
   | "selected_theme"
   | "sound_effects"
   | "haptics"
   | "keyboard_animations";
 
-type GameSettingType = Record<localStorageKeyValues, string>;
+type casualGameModeSettingsValues = "word_length" | "chances";
 
-type CasualGameModeSettingsType = {
-  wordLength: number;
-  chances: number;
-};
+// ------------------------------
+
+// -----------------------------
+type GameSettingType = Record<localStorageKeyValues, string>;
+type CasualGameModeSettingsType = Record<casualGameModeSettingsValues, number>;
+// -----------------------------
 
 const GameDataContext = createContext<{
   getLocalGameStateData(key: localStorageKeyValues): string | false;
@@ -28,16 +32,22 @@ const GameDataContext = createContext<{
   gameSettings: GameSettingType;
 
   casualGameModeSettings: CasualGameModeSettingsType;
-  setCasualGameModeSettings: React.Dispatch<
-    React.SetStateAction<CasualGameModeSettingsType>
-  >;
+  setCasualGameModeSettingsInContext(
+    key: casualGameModeSettingsValues[],
+    value: number[],
+  ): boolean;
 } | null>(null);
 
-const default_values = {
+const default_values_for_game_settings = {
   selected_theme: "light",
   sound_effects: "true",
   haptics: "true",
   keyboard_animations: "true",
+};
+
+const default_values_for_casual_game_settings: CasualGameModeSettingsType = {
+  word_length: 5,
+  chances: 6,
 };
 
 function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
@@ -50,7 +60,7 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
 
   const [casualGameModeSettings, setCasualGameModeSettings] =
     useState<CasualGameModeSettingsType>({
-      wordLength: 5,
+      word_length: 5,
       chances: 6,
     });
 
@@ -72,12 +82,29 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
     return true;
   }
 
+  function setCasualGameModeSettingsInContext(
+    key: casualGameModeSettingsValues[],
+    value: number[],
+  ) {
+    key.forEach((x, i) => {
+      setGameSettings((org) => ({
+        ...org,
+        [x]: value[i],
+      }));
+      localStorage.setItem("casual_mode_" + x, value[i].toString());
+    });
+
+    return true;
+  }
+
   function setupInitalLocalGameState() {
     (
-      Array.from(Object.keys(default_values)) as localStorageKeyValues[]
+      Array.from(
+        Object.keys(default_values_for_game_settings),
+      ) as localStorageKeyValues[]
     ).forEach((x) => {
       if (!getLocalGameStateData(x)) {
-        setLocalGameStateData(x, default_values[x]);
+        setLocalGameStateData(x, default_values_for_game_settings[x]);
       } else {
         setLocalGameStateData(x, getLocalGameStateData(x) as string);
       }
@@ -107,7 +134,7 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
         setLocalGameStateData,
         gameSettings,
         casualGameModeSettings,
-        setCasualGameModeSettings,
+        setCasualGameModeSettingsInContext,
       }}
     >
       {children}
