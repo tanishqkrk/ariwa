@@ -54,6 +54,8 @@ export default function CasualGameMode() {
     startTimeEpoch,
   } = useStopwatch();
 
+  const IS_DEV = process.env.NEXT_PUBLIC_IS_DEV;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [localWordLength, setLocalWordLength] = useState(word_length);
   const [localChances, setLocalChances] = useState(chances);
@@ -494,7 +496,7 @@ export default function CasualGameMode() {
         life={life}
         wordLength={word_length}
       ></GameGridComponent>
-      {!gameover ? (
+      {IS_DEV === "true" && !gameover ? (
         <div className="flex text-correct  min-h-10 gap-2 text-xl">
           {word.split("").map((x, i) => {
             if (x) {
