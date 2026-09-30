@@ -10,30 +10,30 @@ import {
 
 // -------------------------------
 
-type localStorageKeyValues =
+type LocalStorageKeyValues =
   | "selected_theme"
   | "sound_effects"
   | "haptics"
   | "keyboard_animations";
 
-type casualGameModeSettingsValues = "word_length" | "chances";
+type CasualGameModeSettingsValues = "word_length" | "chances";
 
 // ------------------------------
 
 // -----------------------------
-type GameSettingType = Record<localStorageKeyValues, string>;
-type CasualGameModeSettingsType = Record<casualGameModeSettingsValues, number>;
+type GameSettingType = Record<LocalStorageKeyValues, string>;
+type CasualGameModeSettingsType = Record<CasualGameModeSettingsValues, number>;
 // -----------------------------
 
+type SinglePlayerGameModes = "daily_word" | "casual_mode" | "race_against_time";
+
 const GameDataContext = createContext<{
-  getLocalGameStateData(key: localStorageKeyValues): string | false;
-  setLocalGameStateData(key: localStorageKeyValues, value: string): boolean;
-
+  getLocalGameStateData(key: LocalStorageKeyValues): string | false;
+  setLocalGameStateData(key: LocalStorageKeyValues, value: string): boolean;
   gameSettings: GameSettingType;
-
   casualGameModeSettings: CasualGameModeSettingsType;
   setCasualGameModeSettingsInContext(
-    key: casualGameModeSettingsValues[],
+    key: CasualGameModeSettingsValues[],
     value: number[],
   ): boolean;
 } | null>(null);
@@ -64,7 +64,7 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
       chances: 6,
     });
 
-  function getLocalGameStateData(key: localStorageKeyValues) {
+  function getLocalGameStateData(key: LocalStorageKeyValues) {
     let valueToReturn = localStorage.getItem(key);
     if (valueToReturn) {
       return valueToReturn;
@@ -72,7 +72,8 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
       return false;
     }
   }
-  function setLocalGameStateData(key: localStorageKeyValues, value: string) {
+
+  function setLocalGameStateData(key: LocalStorageKeyValues, value: string) {
     setGameSettings((org) => ({
       ...org,
       [key]: value,
@@ -83,7 +84,7 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
   }
 
   function setCasualGameModeSettingsInContext(
-    key: casualGameModeSettingsValues[],
+    key: CasualGameModeSettingsValues[],
     value: number[],
   ) {
     key.forEach((x, i) => {
@@ -101,7 +102,7 @@ function GameDataProvider({ children }: Readonly<{ children: ReactNode }>) {
     (
       Array.from(
         Object.keys(default_values_for_game_settings),
-      ) as localStorageKeyValues[]
+      ) as LocalStorageKeyValues[]
     ).forEach((x) => {
       if (!getLocalGameStateData(x)) {
         setLocalGameStateData(x, default_values_for_game_settings[x]);

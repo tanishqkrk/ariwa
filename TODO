@@ -5,6 +5,7 @@ TODO:
         ☐ Google auth setup
         ☐ User DB setup
         ☐ Notifications system
+        ☐ Convert individual game mode context functions and states to global ones
         ✔ Improve keyboard performance @done(26-09-26 17:07)
     @today Casual Mode:
         ✔ Game over screens @done(26-09-19 14:23)

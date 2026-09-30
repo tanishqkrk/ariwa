@@ -103,7 +103,7 @@ export default function CasualGameMode() {
     "rounded-sm",
     "rounded-xs",
   ];
-  console.log(word);
+  // console.log(word);
 
   function addLetter(letter: string) {
     if (currentIndex < word_length) {
@@ -724,7 +724,7 @@ export default function CasualGameMode() {
                     {word.split("").map((x) => (
                       <span
                         key={x}
-                        className="bg-linear-to-b from-orange-500 to-red-500 text-white h-full  w-full aspect-square rounded-lg flex justify-center items-center text-xl font-semibold"
+                        className="bg-linear-to-b from-red-400 to-red-500 text-background h-full  w-full aspect-square rounded-lg flex justify-center items-center text-xl font-semibold"
                       >
                         {x}
                       </span>

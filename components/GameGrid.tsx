@@ -38,7 +38,7 @@ const GameGridComponent = memo(function GameGridComponent({
                   key={i}
                   className={`h-16 ${letterSizeForMobile[wordLength]} 
                   
-                  aspect-square   text-center flex justify-center items-center text-xl max-md:text-xl font-bold   ${borderRadiusForMobile[wordLength]}
+                  aspect-square   text-center flex justify-center items-center text-3xl max-md:text-2xl font-bold   ${borderRadiusForMobile[wordLength]}
                   border border-foreground/30 dark:border-background/50
                         ${
                           j === life
